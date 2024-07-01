@@ -6,8 +6,12 @@ import (
 	"fmt"
 )
 
+var (
+	errEmptyQueue error = errors.New("queue is empty")
+)
+
 type queue[Type node.Number | string] struct {
-	head   *node.Node[Type]
+	head   *node.SingleNode[Type]
 	Length int
 }
 
@@ -20,9 +24,9 @@ func NewQueue[Type node.Number | string]() *queue[Type] {
 	return queue
 }
 
-// Enqueue: adds a new Node[Type] to the queue[Type]
+// Enqueue: adds a new SingleNode[Type] to the queue[Type] - O(1)
 func (queue *queue[Type]) Enqueue(data Type) {
-	node := node.NewNode(data)
+	node := node.NewSingleNode(data)
 	
 	if queue.Length != 0 {
 		node.Next = queue.head
@@ -31,12 +35,12 @@ func (queue *queue[Type]) Enqueue(data Type) {
 	queue.Length++
 }
 
-// Dequeue: removes the last element added, returning the data in the Node[Type]
+// Dequeue: removes the last element added, returning the data in the SingleNode[Type] - O(1)
 func (queue *queue[Type]) Dequeue() (Type, error) {
 	var data Type
 
 	if (queue.Length == 0) {
-		return data, errors.New("empty list error")
+		return data, errEmptyQueue
 	}
 	data = queue.head.Data
 	queue.head = queue.head.Next
@@ -45,12 +49,34 @@ func (queue *queue[Type]) Dequeue() (Type, error) {
 	return data, nil
 }
 
-// Print: scroll through the queue[Type], printing the data to the existing Node[Type]
+// Contains: checks if queue[Type] contains the data in any SingleNode[Type],
+// returning true if yes, false otherwise - O(n)
+func (queue *queue[Type]) Contains(data Type) (bool, error) {
+	if (queue.Length == 0) {
+		return false, errEmptyQueue
+	}
+	hook := queue.head
+
+	for {
+		if (hook == nil) {
+			return false, nil
+		}
+		if (hook.Data == data) {
+			return true, nil
+		}
+		hook = hook.Next
+	}
+}
+
+// Print: scroll through the queue[Type], printing the data to the existing SingleNode[Type] - O(n)
 func (queue *queue[Type]) Print() {
 	hook := queue.head
 
-	for i := range queue.Length {
-		fmt.Printf("%d: %v, ", i, hook.Data)
+	for {
+		if (hook == nil) {
+			break
+		}
+		fmt.Printf("%v, ", hook.Data)
 		hook = hook.Next
 	}
 	fmt.Printf("Length: %v\n", queue.Length)

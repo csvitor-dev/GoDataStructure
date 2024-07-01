@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"data-structure/queue"
+	"fmt"
 )
 
 func main() {
@@ -10,8 +10,7 @@ func main() {
 	queue.Enqueue("C#")
 	queue.Enqueue("Golang")
 	queue.Enqueue("TypeScript")
-	value, err := queue.Dequeue()
-	queue.Print()
 
-	fmt.Printf("%v %v\n", value, err)
+	queue.Print()
+	fmt.Println(queue.Contains("F#"))
 }
