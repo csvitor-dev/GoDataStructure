@@ -15,7 +15,7 @@ type queue[Type node.Number | string] struct {
 	Length int
 }
 
-// Newqueue: create new instance of queue[Type]
+// NewQueue: create new instance of queue[Type]
 func NewQueue[Type node.Number | string]() *queue[Type] {
 	queue := &queue[Type]{
 		head: nil,
@@ -68,7 +68,7 @@ func (queue *queue[Type]) Contains(data Type) (bool, error) {
 	}
 }
 
-// Print: scroll through the queue[Type], printing the data to the existing SingleNode[Type] - O(n)
+// Print: traverses through the queue[Type], printing the data to the existing SingleNode[Type] - O(n)
 func (queue *queue[Type]) Print() {
 	hook := queue.head
 

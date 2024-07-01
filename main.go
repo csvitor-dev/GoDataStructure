@@ -1,16 +1,14 @@
 package main
 
 import (
-	"data-structure/queue"
-	"fmt"
+	"data-structure/stack"
 )
 
 func main() {
-	queue := queue.NewQueue[string]()
-	queue.Enqueue("C#")
-	queue.Enqueue("Golang")
-	queue.Enqueue("TypeScript")
+	stack := stack.NewStack[string]()
+	stack.Push("C#")
+	stack.Push("Golang")
+	stack.Push("TypeScript")
 
-	queue.Print()
-	fmt.Println(queue.Contains("F#"))
+	stack.Print()
 }
