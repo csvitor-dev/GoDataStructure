@@ -34,7 +34,7 @@ func (stack *stack[Type]) Push(data Type) {
 	stack.Length++
 }
 
-// Pop: removes the last element added in the stack, returning it - O(1)
+// Pop: removes the last element added in the stack, returning the data in the SingleNode[Type] - O(1)
 func (stack *stack[Type]) Pop() (Type, error) {
 	var data Type
 	

@@ -10,8 +10,10 @@ var (
 	errEmptyQueue error = errors.New("queue is empty")
 )
 
+// FIFO - First In, First Out
 type queue[Type node.Number | string] struct {
 	head   *node.SingleNode[Type]
+	tail   *node.SingleNode[Type]
 	Length int
 }
 
@@ -19,6 +21,7 @@ type queue[Type node.Number | string] struct {
 func NewQueue[Type node.Number | string]() *queue[Type] {
 	queue := &queue[Type]{
 		head: nil,
+		tail: nil,
 		Length: 0,
 	}
 	return queue
@@ -28,14 +31,17 @@ func NewQueue[Type node.Number | string]() *queue[Type] {
 func (queue *queue[Type]) Enqueue(data Type) {
 	node := node.NewSingleNode(data)
 	
-	if queue.Length != 0 {
-		node.Next = queue.head
+	if (queue.Length == 0) {
+		queue.head = node
+		queue.tail = node
+	} else {
+		queue.tail.Next = node
+		queue.tail = node
 	}
-	queue.head = node
 	queue.Length++
 }
 
-// Dequeue: removes the last element added, returning the data in the SingleNode[Type] - O(1)
+// Dequeue: removes the first element added, returning the data in the SingleNode[Type] - O(1)
 func (queue *queue[Type]) Dequeue() (Type, error) {
 	var data Type
 
@@ -43,6 +49,10 @@ func (queue *queue[Type]) Dequeue() (Type, error) {
 		return data, errEmptyQueue
 	}
 	data = queue.head.Data
+
+	if (queue.Length == 1) {
+		queue.tail = queue.tail.Next
+	}
 	queue.head = queue.head.Next
 	queue.Length--
 
