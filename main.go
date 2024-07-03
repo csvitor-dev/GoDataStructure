@@ -1,15 +1,18 @@
 package main
 
 import (
-	"data-structure/queue"
+	linkedlist "data-structure/linked_list"
 )
 
 func main() {
-	queue := queue.NewQueue[string]()
-	queue.Enqueue("C#")
-	queue.Enqueue("Golang")
-	queue.Enqueue("TypeScript")
-	queue.Dequeue()
+	list := linkedlist.NewSingleLinkedList[string]()
+	list.Add("C#")
+	list.Add("Golang")
+	list.Add("TypeScript")
 
-	queue.Print()
+	list.InsertAt(1, "PHP")
+
+	list.Delete()
+
+	list.Print()
 }
