@@ -5,14 +5,18 @@ import (
 )
 
 func main() {
-	list := collections.NewSingleLinkedList[string]()
+	list := collections.NewDoublyLinkedList[string]()
 	list.Add("C#")
 	list.Add("Golang")
 	list.Add("TypeScript")
 	list.Add("PHP")
+	list.Print(true)
 
-	list.Print()
-	list.RemoveAt(3)
+	list.InsertAt(1, ".NET")
+	list.Print(true)
 
-	list.Print()
+	list.Delete()
+	list.RemoveAt(2)
+
+	list.Print(true)
 }

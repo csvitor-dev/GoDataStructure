@@ -128,11 +128,12 @@ func (linkedList *singleLinkedList[Type]) Print() {
 	fmt.Printf("Length: %v\n", linkedList.Length)
 }
 
-// isValidIndexInsert: validates the index based in the list to Insert method
+// isValidIndexInsert: validates the index based in the list to InsertAt method
 func (linkedList *singleLinkedList[Type]) isValidIndexInsert(index int) bool {
 	return index < 0 || index > linkedList.Length
 }
 
+// isValidIndexRemove: validates the index based in the list to RemoveAt method
 func (linkedList *singleLinkedList[Type]) isValidIndexRemove(index int) bool {
 	return index < 0 || index >= linkedList.Length
 }
