@@ -2,21 +2,18 @@ package main
 
 import (
 	"data-structure/collections"
+	"fmt"
 )
 
 func main() {
-	list := collections.NewDoublyLinkedList[string]()
-	list.Add("C#")
-	list.Add("Golang")
-	list.Add("TypeScript")
-	list.Add("PHP")
-	list.Print(true)
 
-	list.InsertAt(1, ".NET")
-	list.Print(true)
-
-	list.Delete()
-	list.RemoveAt(2)
-
-	list.Print(true)
+	doublyLinkedList := collections.NewDoublyLinkedList[string]()
+	doublyLinkedList.InsertAt(0, "C#")
+	doublyLinkedList.InsertAt(0, ".NET")
+	doublyLinkedList.InsertAt(2, "Golang")
+	doublyLinkedList.InsertAt(2, "TypeScript")
+	
+	value, err := doublyLinkedList.RemoveAt(2)
+	doublyLinkedList.Print(true)
+	fmt.Printf("%v, %v\n", value, err)
 }

@@ -8,7 +8,7 @@ import (
 type doublyLinkedList[Type node.Number | string] struct {
 	head   *node.DoubleNode[Type]
 	tail   *node.DoubleNode[Type]
-	Length int
+	length int
 }
 
 // NewDoublyLinkedList: create new instance of doublyLinkedList[Type]
@@ -16,7 +16,7 @@ func NewDoublyLinkedList[Type node.Number | string]() *doublyLinkedList[Type] {
 	linkedList := &doublyLinkedList[Type]{
 		head: nil,
 		tail: nil,
-		Length: 0,
+		length: 0,
 	}
 	return linkedList
 }
@@ -25,23 +25,23 @@ func NewDoublyLinkedList[Type node.Number | string]() *doublyLinkedList[Type] {
 func (linkedList *doublyLinkedList[Type]) Add(data Type) {
 	node := node.NewDoubleNode(data)
 
-	if (linkedList.Length == 0) {
+	if (linkedList.length == 0) {
 		linkedList.head = node
 	} else {
 		linkedList.tail.Next = node
 		node.Previous = linkedList.tail
 	}
 	linkedList.tail = node
-	linkedList.Length++
+	linkedList.length++
 }
 
 // InsertAt: adds a new DoubleNode[Type] to the doublyLinkedList[Type] in the index if it is valid, otherwise return error - O(n)
 func (linkedList *doublyLinkedList[Type]) InsertAt(index int, data Type) error {
-	if (linkedList.isValidIndexInsert(index)) {
+	if (!linkedList.isValidIndexInsert(index)) {
 		return errOutOfRangeIndex
 	}
 
-	if (index == linkedList.Length) {
+	if (index == linkedList.length) {
 		linkedList.Add(data)
 		return nil
 	}
@@ -58,7 +58,7 @@ func (linkedList *doublyLinkedList[Type]) InsertAt(index int, data Type) error {
 		hookAtIndex.Next.Previous = node
 		hookAtIndex.Next = node
 	}
-	linkedList.Length++
+	linkedList.length++
 	return nil
 }
 
@@ -66,7 +66,7 @@ func (linkedList *doublyLinkedList[Type]) InsertAt(index int, data Type) error {
 func (linkedList *doublyLinkedList[Type]) Delete() (Type, error) {
 	var data Type
 
-	if (linkedList.Length == 0) {
+	if (linkedList.length == 0) {
 		return data, errEmptyList
 	}
 
@@ -77,14 +77,14 @@ func (linkedList *doublyLinkedList[Type]) Delete() (Type, error) {
 		linkedList.head.Previous = nil
 	}
 
-	if (linkedList.Length == 1) {
+	if (linkedList.length == 1) {
 		linkedList.tail = hook.Previous
 	}
 
 	data = hook.Data
 	hook.Next = nil
 
-	linkedList.Length--
+	linkedList.length--
 	return data, nil
 }
 
@@ -92,7 +92,7 @@ func (linkedList *doublyLinkedList[Type]) Delete() (Type, error) {
 func (linkedList *doublyLinkedList[Type]) RemoveAt(index int) (Type, error) {
 	var data Type
 
-	if (linkedList.isValidIndexRemove(index)) {
+	if (!linkedList.isValidIndexRemove(index)) {
 		return data, errOutOfRangeIndex
 	}
 
@@ -116,55 +116,55 @@ func (linkedList *doublyLinkedList[Type]) RemoveAt(index int) (Type, error) {
 	hook.Next = nil
 	hook.Previous = nil
 
-	linkedList.Length--
+	linkedList.length--
 	return data, nil
 }
 
 // Print: traverses through the doublyLinkedList[Type], printing the data to the existing DoubleNode[Type];
 // option parameter allows define the order of print: true is ascending and false is descending - O(n)
 func (linkedList *doublyLinkedList[Type]) Print(option bool) {
+	if (linkedList.length == 0) {
+		fmt.Printf("Length: %v\n", linkedList.length)
+		return
+	}
+	
 	if (option) {
 		linkedList.printAscendent()
-	} else {
-		linkedList.printDescendent()
+		return
 	}
-	fmt.Printf("Length: %v\n", linkedList.Length)
+	linkedList.printDescendent()
 }
 
 // printAscendent: ...
 func (linkedList *doublyLinkedList[Type]) printAscendent() {
 	hook := linkedList.head
 	
-	for {
-		if (hook == nil) {
-			break
-		}
+	for (hook != nil) {
 		fmt.Printf("%v, ", hook.Data)
 		hook = hook.Next
 	}
+	fmt.Printf("Length: %v\n", linkedList.length)
 }
 
 // printDescendent: ...
 func (linkedList *doublyLinkedList[Type]) printDescendent() {
 	hook := linkedList.tail
 	
-	for {
-		if (hook == nil) {
-			break
-		}
+	for (hook != nil) {
 		fmt.Printf("%v, ", hook.Data)
 		hook = hook.Previous
 	}
+	fmt.Printf("Length: %v\n", linkedList.length)
 }
 
 // isValidIndexInsert: validates the index based in the list to InsertAt method
 func (linkedList *doublyLinkedList[Type]) isValidIndexInsert(index int) bool {
-	return index < 0 || index > linkedList.Length
+	return index >= 0 && index <= linkedList.length
 }
 
 // isValidIndexRemove: validates the index based in the list to RemoveAt method
 func (linkedList *doublyLinkedList[Type]) isValidIndexRemove(index int) bool {
-	return index < 0 || index >= linkedList.Length
+	return index >= 0 && index < linkedList.length
 }
 
 // searchNode: searches for DoubleNode[Type] in the valid index and returns the reference of the node before it
