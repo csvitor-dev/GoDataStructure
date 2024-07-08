@@ -13,14 +13,14 @@ var (
 // LIFO - Last In, First Out
 type stack[Type node.Number | string] struct {
 	head   *node.SingleNode[Type]
-	Length int
+	length int
 }
 
 // NewStack: create new instance of stack[Type]
 func NewStack[Type node.Number | string]() *stack[Type] {
 	stack := &stack[Type]{
 		head: nil,
-		Length: 0,
+		length: 0,
 	}
 	return stack
 }
@@ -31,19 +31,19 @@ func (stack *stack[Type]) Push(data Type) {
 
 	node.Next = stack.head
 	stack.head = node
-	stack.Length++
+	stack.length++
 }
 
 // Pop: removes the last element added in the stack, returning the data in the SingleNode[Type] - O(1)
 func (stack *stack[Type]) Pop() (Type, error) {
 	var data Type
 	
-	if (stack.Length == 0) {
+	if (stack.length == 0) {
 		return data, errEmptyStack
 	}
 	data = stack.head.Data
 	stack.head = stack.head.Next
-	stack.Length--
+	stack.length--
 
 	return data, nil
 }
@@ -52,12 +52,9 @@ func (stack *stack[Type]) Pop() (Type, error) {
 func (stack *stack[Type]) Print() {
 	hook := stack.head
 
-	for {
-		if (hook == nil) {
-			break
-		}
+	for  (hook != nil) {
 		fmt.Printf("%v,\n", hook.Data)
 		hook = hook.Next
 	}
-	fmt.Printf("Length: %v\n", stack.Length)
+	fmt.Printf("Length: %v\n", stack.length)
 }
