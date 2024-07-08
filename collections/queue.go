@@ -14,7 +14,7 @@ var (
 type queue[Type node.Number | string] struct {
 	head   *node.SingleNode[Type]
 	tail   *node.SingleNode[Type]
-	Length int
+	length int
 }
 
 // NewQueue: create new instance of queue[Type]
@@ -22,7 +22,7 @@ func NewQueue[Type node.Number | string]() *queue[Type] {
 	queue := &queue[Type]{
 		head: nil,
 		tail: nil,
-		Length: 0,
+		length: 0,
 	}
 	return queue
 }
@@ -31,30 +31,29 @@ func NewQueue[Type node.Number | string]() *queue[Type] {
 func (queue *queue[Type]) Enqueue(data Type) {
 	node := node.NewSingleNode(data)
 	
-	if (queue.Length == 0) {
+	if (queue.length == 0) {
 		queue.head = node
-		queue.tail = node
 	} else {
 		queue.tail.Next = node
-		queue.tail = node
 	}
-	queue.Length++
+	queue.tail = node
+	queue.length++
 }
 
 // Dequeue: removes the first element added, returning the data in the SingleNode[Type] - O(1)
 func (queue *queue[Type]) Dequeue() (Type, error) {
 	var data Type
 
-	if (queue.Length == 0) {
+	if (queue.length == 0) {
 		return data, errEmptyQueue
 	}
 	data = queue.head.Data
 
-	if (queue.Length == 1) {
+	if (queue.length == 1) {
 		queue.tail = queue.tail.Next
 	}
 	queue.head = queue.head.Next
-	queue.Length--
+	queue.length--
 
 	return data, nil
 }
@@ -62,7 +61,7 @@ func (queue *queue[Type]) Dequeue() (Type, error) {
 // Contains: checks if queue[Type] contains the data in any SingleNode[Type],
 // returning true if yes, false otherwise - O(n)
 func (queue *queue[Type]) Contains(data Type) (bool, error) {
-	if (queue.Length == 0) {
+	if (queue.length == 0) {
 		return false, errEmptyQueue
 	}
 	hook := queue.head
@@ -82,12 +81,9 @@ func (queue *queue[Type]) Contains(data Type) (bool, error) {
 func (queue *queue[Type]) Print() {
 	hook := queue.head
 
-	for {
-		if (hook == nil) {
-			break
-		}
+	for (hook != nil) {
 		fmt.Printf("%v, ", hook.Data)
 		hook = hook.Next
 	}
-	fmt.Printf("Length: %v\n", queue.Length)
+	fmt.Printf("Length: %v\n", queue.length)
 }
