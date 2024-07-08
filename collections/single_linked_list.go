@@ -14,7 +14,7 @@ var (
 type singleLinkedList[Type node.Number | string] struct {
 	head   *node.SingleNode[Type]
 	tail   *node.SingleNode[Type]
-	Length int
+	length int
 }
 
 // NewSingleLinkedList: create new instance of singleLinkedList[Type]
@@ -22,7 +22,7 @@ func NewSingleLinkedList[Type node.Number | string]() *singleLinkedList[Type] {
 	linkedList := &singleLinkedList[Type]{
 		head: nil,
 		tail: nil,
-		Length: 0,
+		length: 0,
 	}
 	return linkedList
 }
@@ -31,23 +31,22 @@ func NewSingleLinkedList[Type node.Number | string]() *singleLinkedList[Type] {
 func (linkedList *singleLinkedList[Type]) Add(data Type) {
 	node := node.NewSingleNode(data)
 
-	if (linkedList.Length == 0) {
+	if (linkedList.length == 0) {
 		linkedList.head = node
-		linkedList.tail = node
 	} else {
 		linkedList.tail.Next = node
-		linkedList.tail = node
 	}
-	linkedList.Length++
+	linkedList.tail = node
+	linkedList.length++
 }
 
 // InsertAt: adds a new SingleNode[Type] to the singleLinkedList[Type] in the index if it is valid, otherwise return error - O(n)
 func (linkedList *singleLinkedList[Type]) InsertAt(index int, data Type) error {
-	if (linkedList.isValidIndexInsert(index)) {
+	if (!linkedList.isValidIndexInsert(index)) {
 		return errOutOfRangeIndex
 	}
 
-	if (index == linkedList.Length) {
+	if (index == linkedList.length) {
 		linkedList.Add(data)
 		return nil
 	}
@@ -61,7 +60,7 @@ func (linkedList *singleLinkedList[Type]) InsertAt(index int, data Type) error {
 		node.Next = hookAtIndex.Next
 		hookAtIndex.Next = node
 	}
-	linkedList.Length++
+	linkedList.length++
 	return nil
 }
 
@@ -69,21 +68,21 @@ func (linkedList *singleLinkedList[Type]) InsertAt(index int, data Type) error {
 func (linkedList *singleLinkedList[Type]) Delete() (Type, error) {
 	var data Type
 
-	if (linkedList.Length == 0) {
+	if (linkedList.length == 0) {
 		return data, errEmptyList
 	}
 
 	hook := linkedList.head
 	linkedList.head = hook.Next
 
-	if (linkedList.Length == 1) {
+	if (linkedList.length == 1) {
 		linkedList.tail = hook.Next
 	}
 
 	data = hook.Data
 	hook.Next = nil
 
-	linkedList.Length--
+	linkedList.length--
 	return data, nil
 }
 
@@ -91,7 +90,7 @@ func (linkedList *singleLinkedList[Type]) Delete() (Type, error) {
 func (linkedList *singleLinkedList[Type]) RemoveAt(index int) (Type, error) {
 	var data Type
 
-	if (linkedList.isValidIndexRemove(index)) {
+	if (!linkedList.isValidIndexRemove(index)) {
 		return data, errOutOfRangeIndex
 	}
 
@@ -110,7 +109,7 @@ func (linkedList *singleLinkedList[Type]) RemoveAt(index int) (Type, error) {
 	hookAtIndex.Next = hook.Next
 	hook.Next = nil
 
-	linkedList.Length--
+	linkedList.length--
 	return data, nil
 }
 
@@ -125,17 +124,17 @@ func (linkedList *singleLinkedList[Type]) Print() {
 		fmt.Printf("%v, ", hook.Data)
 		hook = hook.Next
 	}
-	fmt.Printf("Length: %v\n", linkedList.Length)
+	fmt.Printf("Length: %v\n", linkedList.length)
 }
 
 // isValidIndexInsert: validates the index based in the list to InsertAt method
 func (linkedList *singleLinkedList[Type]) isValidIndexInsert(index int) bool {
-	return index < 0 || index > linkedList.Length
+	return index >= 0 && index <= linkedList.length
 }
 
 // isValidIndexRemove: validates the index based in the list to RemoveAt method
 func (linkedList *singleLinkedList[Type]) isValidIndexRemove(index int) bool {
-	return index < 0 || index >= linkedList.Length
+	return index >= 0 && index < linkedList.length
 }
 
 // searchNode: searches for SingleNode[Type] in the valid index and returns the reference of the node before it
