@@ -11,15 +11,15 @@ var (
 	errEmptyList error = errors.New("linked list is empty")
 )
 
-type singleLinkedList[Type node.Number | string] struct {
+type singlyLinkedList[Type node.Number | string] struct {
 	head   *node.SingleNode[Type]
 	tail   *node.SingleNode[Type]
 	length int
 }
 
-// NewSingleLinkedList: create new instance of singleLinkedList[Type]
-func NewSingleLinkedList[Type node.Number | string]() *singleLinkedList[Type] {
-	linkedList := &singleLinkedList[Type]{
+// NewSinglyLinkedList: create new instance of singlyLinkedList[Type]
+func NewSinglyLinkedList[Type node.Number | string]() *singlyLinkedList[Type] {
+	linkedList := &singlyLinkedList[Type]{
 		head: nil,
 		tail: nil,
 		length: 0,
@@ -27,8 +27,8 @@ func NewSingleLinkedList[Type node.Number | string]() *singleLinkedList[Type] {
 	return linkedList
 }
 
-// Add: adds a new SingleNode[Type] to the singleLinkedList[Type], default insertion - 0(1)
-func (linkedList *singleLinkedList[Type]) Add(data Type) {
+// Add: adds a new SingleNode[Type] to the singlyLinkedList[Type], default insertion - 0(1)
+func (linkedList *singlyLinkedList[Type]) Add(data Type) {
 	node := node.NewSingleNode(data)
 
 	if (linkedList.length == 0) {
@@ -40,8 +40,8 @@ func (linkedList *singleLinkedList[Type]) Add(data Type) {
 	linkedList.length++
 }
 
-// InsertAt: adds a new SingleNode[Type] to the singleLinkedList[Type] in the index if it is valid, otherwise return error - O(n)
-func (linkedList *singleLinkedList[Type]) InsertAt(index int, data Type) error {
+// InsertAt: adds a new SingleNode[Type] to the singlyLinkedList[Type] in the index if it is valid, otherwise return error - O(n)
+func (linkedList *singlyLinkedList[Type]) InsertAt(index int, data Type) error {
 	if (!linkedList.isValidIndexInsert(index)) {
 		return errOutOfRangeIndex
 	}
@@ -65,7 +65,7 @@ func (linkedList *singleLinkedList[Type]) InsertAt(index int, data Type) error {
 }
 
 // Delete: removes the first element in the list, returning the data to the SingleNode[Type], default remotion - O(1)
-func (linkedList *singleLinkedList[Type]) Delete() (Type, error) {
+func (linkedList *singlyLinkedList[Type]) Delete() (Type, error) {
 	var data Type
 
 	if (linkedList.length == 0) {
@@ -86,8 +86,8 @@ func (linkedList *singleLinkedList[Type]) Delete() (Type, error) {
 	return data, nil
 }
 
-// RemoveAt: removes the element of the singleLinkedList[Type] in the valid index returning it, otherwise return error - O(n)
-func (linkedList *singleLinkedList[Type]) RemoveAt(index int) (Type, error) {
+// RemoveAt: removes the element of the singlyLinkedList[Type] in the valid index returning it, otherwise return error - O(n)
+func (linkedList *singlyLinkedList[Type]) RemoveAt(index int) (Type, error) {
 	var data Type
 
 	if (!linkedList.isValidIndexRemove(index)) {
@@ -113,14 +113,11 @@ func (linkedList *singleLinkedList[Type]) RemoveAt(index int) (Type, error) {
 	return data, nil
 }
 
-// Print: traverses through the singleLinkedList[Type], printing the data to the existing SingleNode[Type] - O(n)
-func (linkedList *singleLinkedList[Type]) Print() {
+// Print: traverses through the singlyLinkedList[Type], printing the data to the existing SingleNode[Type] - O(n)
+func (linkedList *singlyLinkedList[Type]) Print() {
 	hook := linkedList.head
 	
-	for {
-		if (hook == nil) {
-			break
-		}
+	for (hook != nil) {
 		fmt.Printf("%v, ", hook.Data)
 		hook = hook.Next
 	}
@@ -128,17 +125,17 @@ func (linkedList *singleLinkedList[Type]) Print() {
 }
 
 // isValidIndexInsert: validates the index based in the list to InsertAt method
-func (linkedList *singleLinkedList[Type]) isValidIndexInsert(index int) bool {
+func (linkedList *singlyLinkedList[Type]) isValidIndexInsert(index int) bool {
 	return index >= 0 && index <= linkedList.length
 }
 
 // isValidIndexRemove: validates the index based in the list to RemoveAt method
-func (linkedList *singleLinkedList[Type]) isValidIndexRemove(index int) bool {
+func (linkedList *singlyLinkedList[Type]) isValidIndexRemove(index int) bool {
 	return index >= 0 && index < linkedList.length
 }
 
 // searchNode: searches for SingleNode[Type] in the valid index and returns the reference of the node before it
-func (linkedList *singleLinkedList[Type]) searchNode(index int) (*node.SingleNode[Type]) {
+func (linkedList *singlyLinkedList[Type]) searchNode(index int) (*node.SingleNode[Type]) {
 	hook := linkedList.head
 
 	for {
