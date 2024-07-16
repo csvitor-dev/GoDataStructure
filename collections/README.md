@@ -1,6 +1,6 @@
 # Talking About Familiar Concepts
 
-> Now, we'll talk about essential concepts for both this projectand for **Go** itself!
+> Now, we'll talk about essential concepts for both this project and for **Go** itself!
 
 For those who have studied a bit of the **C language**, they will understand the ideas more easily. But I'll try to explore each of these concepts sufficiently.
 
@@ -62,19 +62,32 @@ Sure, there's already quite a bit you can do. But there's something even more in
 Methods in **Go** are functions specified for a `struct` type, which follow the following notation (exactly like the functions that have already been seen):
 
 ```go
-func (car Car) run() {
+func (car Car) Run() {
     println(car.Brand, car.Model, "is running...")
 }
 ```
 
 So, the function (actually, _method of the Car `struct`_) will only be visible to instances of Car!
 
+```go
+// ...
+func main() {
+    car := Car{
+        Brand: "Pagani",
+        Model: "Zonda R",
+        year: 2007,
+        motorState: false,
+    }
+    car.Run() // will show `Pagani Zonda R is running...`
+}
+```
+
 That's why this code:
 
 ```go
 // ...
 func main() {
-    run()
+    Run()
 }
 ```
 
@@ -82,12 +95,54 @@ It will throw a compile-time error:
 
 ```bash
 # command-line-arguments
-...: undefined: run
+...: undefined: Run
 ```
+
+Actually, quite interesting! But there's a problem here... If we declare a _method_ like this:
+
+```go
+func (car Car) ToggleMotorState() {
+    car.motorState = !car.motorState
+
+    if (car.motorState) {
+        println("The car engine is on.")
+        return
+    }
+    println("The car engine is off.")
+}
+```
+
+If we try to run this method with an instance of the Car `struct`, we will get the following result:
+
+```go
+// ...
+
+func main() {
+    car := Car{
+        Brand: "Pagani",
+        Model: "Zonda R",
+        year: 2007,
+        motorState: false,
+    }
+    car.ToggleMotorState()
+    car.ToggleMotorState()
+    car.ToggleMotorState()
+}
+```
+
+```bash
+The car engine is on.
+The car engine is on.
+The car engine is on.
+```
+
+But why?
+
+Simply put, this method won't do what's needed (toggle the value of the `motorState` property) **because it's using pass-by-value instead of pass-by-reference**!
 
 ...
 
-[//]: # "Falar sobre métodos, ponteiros e interfaces (Go Way), para aí sim avançar para o próximo tópico!"
+[//]: # "ponteiros e interfaces (Go Way), para aí sim avançar para o próximo tópico!"
 
 ## Singly Linked List Implementation
 
