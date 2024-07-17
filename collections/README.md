@@ -140,6 +140,67 @@ But why?
 
 Simply put, this method won't do what's needed (toggle the value of the `motorState` property) **because it's using pass-by-value instead of pass-by-reference**!
 
+For those who come from OOP and if our `struct` were actually a `class`, this method would work. Both for those in OO and for **Clang** programmers (who already have a deeper understanding), **_they know what memory reference means_**.
+
+Let's talk about it:
+
+### Value Passing vs. Reference Passing
+
+Let's illustrate with the following function:
+
+```go
+func increment(target, value int) {
+    target += value
+    println(target)
+}
+```
+
+The _passage by value_ occurs when, within the function scope, the parameter is local (thus, **the argument will be copied into the function scope**). So, if there is no return, **the argument won't be changed and the function won't have any effect**.
+
+```go
+// ...
+
+func main() {
+    var x int = 5
+
+    increment(x, 5) // it will show `10`
+    println(x) // but it's still `5`
+}
+```
+
+So, how to solve it? Simple, with _pass-by-reference_. Now, the topic gets more interesting.
+
+First, let's fix the previous function to correct this inconsistency:
+
+```go
+func increment(target *int, value int) {
+    *target += value
+    println(*target)
+}
+```
+
+And in the `main` function, just a few subtle changes:
+
+```go
+// ...
+
+func main() {
+    var x int = 5
+
+    increment(&x, 5) // it will show `10`
+    // what does `&` mean?
+    println(x) // now, it will also show `10`
+}
+```
+
+Great, the _pass-by-reference_ worked! Anyone who has programmed in **Clang** knows where it leads us!
+
+Pass-by-reference works differently; if specified in the parameter (as in the case of the `increment` function, using `*` character), **a copy of the argument won't be created, but instead it will operate on the memory space of the argument itself**.
+
+Sure! Let's talk about **pointers**!
+
+### About Pointers
+
 ...
 
 [//]: # "ponteiros e interfaces (Go Way), para aí sim avançar para o próximo tópico!"
