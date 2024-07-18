@@ -201,9 +201,52 @@ Sure! Let's talk about **pointers**!
 
 ### About Pointers
 
+To remember, let's review the central concept in **Golang** that was inherited from **C language** (even in terms of syntax): **_pointers_**!
+
+By definition, _pointers_ are special variables that store the memory address of another variable same type. Unlike a regular variable, which is limited to the value it stores, pointers manipulate where the value is stored (accessed through a _memory address_), allowing the `increment` function to work!
+
+Two characters are used for this _memory reference_ purpose: `*`and `&`.
+
+> `*` -> **represents both the declaration of a pointer and _the dereference operation_**;
+>
+> `&` -> **accesses the memory address of the variable it accompanies, _it is the expected value for a pointer_**;
+
+```go
+package main
+
+func main() {
+    x := 5
+    p_x := &x
+
+    println(x, *p_x) // only the stored values
+    println(&x, p_x) // the memory address of `x`
+    println(&p_x) // the memory address of `p_x`
+}
+```
+
+The result is variable, but one possible outcome would be:
+
+```bash
+5 5
+0xc000022060 0xc000022060
+0xc000012028
+```
+
+> Memory addresses are formatted in _hexadecimal base_!
+
+<p align="center">
+<img width="450" src="../assets/pointers.png" alt="illustrating pointers in Go"/>
+</p>
+
+The drawing is bad, but I hope the explanation was clear enough!
+
+### Reference Methods
+
+Do you still remember the `ToggleMotorState` method and its pass-by-value? Let's fix that with what we've learned!
+
 ...
 
-[//]: # "ponteiros e interfaces (Go Way), para aí sim avançar para o próximo tópico!"
+[//]: # "Agora, voltamos para falar do método de Car e depois partimos para interfaces!"
 
 ## Singly Linked List Implementation
 
