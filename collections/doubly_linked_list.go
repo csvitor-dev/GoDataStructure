@@ -1,7 +1,7 @@
 package collections
 
 import (
-	"data-structure/collections/node"
+	"GoDataStructure/collections/node"
 	"fmt"
 )
 

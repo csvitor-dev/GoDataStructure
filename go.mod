@@ -1,3 +1,3 @@
-module data-structure
+module GoDataStructure
 
 go 1.22.4
