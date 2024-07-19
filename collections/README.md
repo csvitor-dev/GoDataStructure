@@ -207,9 +207,11 @@ By definition, _pointers_ are special variables that store the memory address of
 
 Two characters are used for this _memory reference_ purpose: `*`and `&`.
 
-> `*` -> **represents both the declaration of a pointer and _the dereference operation_**;
+> `*` -> **represents both the declaration of a pointer and _the dereference operation_** ¹;
 >
 > `&` -> **accesses the memory address of the variable it accompanies, _it is the expected value for a pointer_**;
+
+¹ It's called _dereferencing_ when, from the pointer, we access the value of the variable it refers to.
 
 ```go
 package main
@@ -244,12 +246,74 @@ The drawing is bad, but I hope the explanation was clear enough!
 
 Do you still remember the `ToggleMotorState` method and its pass-by-value? Let's fix that with what we've learned!
 
+`ToggleMotorState` method would look like this:
+
+```go
+func (car *Car) ToggleMotorState() {
+    car.motorState = !car.motorState
+
+    if (car.motorState) {
+        println("The car engine is on.")
+        return
+    }
+    println("The car engine is off.")
+}
+```
+
+Now, with just a new character (`*` in the method declaration), our method works as expected:
+
+```go
+// ...
+
+func main() {
+    car := &Car{
+        Brand: "Pagani",
+        Model: "Zonda R",
+        year: 2007,
+        motorState: false,
+    }
+    car.ToggleMotorState()
+    car.ToggleMotorState()
+    car.ToggleMotorState()
+}
+```
+
+```bash
+The car engine is on.
+The car engine is off.
+The car engine is on.
+```
+
+> The only difference is that instead of instantiating a `struct` Car, the method needs a _pointer_ to that type of `struct`. That's why the initialization statement includes the character `&`.
+
+One interesting detail is that **function declarations that use memory references allows us to create _constructors_ for our types**!
+
+For example, the `struct` Car would have the following _constructor_:
+
+```go
+// ...
+
+func NewCar(brand, model string, year int, motorState bool) *Car {
+    return &Car{
+        Brand: brand,
+        Model: model,
+        year: year,
+        motorState: motorState,
+    }
+}
+
+// ...
+
+func main() {
+    car := NewCar("Pagani", "Zonda R", 2007, false)
+
+    println(car.Brand, car.Model, car.year, car.motorState)
+    // all fields filled out correctly
+}
+```
+
+## A Little About Interfaces
+
 ...
 
-[//]: # "Agora, voltamos para falar do método de Car e depois partimos para interfaces!"
-
-## Singly Linked List Implementation
-
-...
-
-[//]: # "Falar sobre `error`, módulos, exportações e importações no Go e implementar a singly linked list de forma detalhada"
+Now you are ready to explore this repository however you want! If you'd like, you can see how the implementation of a data structure and its algorithms works [here](./TUTORIAL.md)!
