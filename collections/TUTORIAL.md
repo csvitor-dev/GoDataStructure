@@ -6,4 +6,4 @@ The main reason for this implementation (besides revisiting the same learnings I
 
 ...
 
-[//]: # "Falar sobre `error`, módulos, exportações e importações no Go e implementar a singly linked list de forma detalhada"
+[//]: # "Falar sobre `error` no Go e implementar a singly linked list de forma detalhada"

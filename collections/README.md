@@ -23,12 +23,16 @@ Well, but to be more specific. Let's create an example that will be useful for t
 ```go
 package main
 
+import "fmt"
+
 type Car struct {
     Brand string
     Model string
     year int
     motorState bool
 }
+
+// ...
 ```
 
 > I know, I know... Some properties have the first letter capitalized, while others don't. But it's not just an aesthetic detail, I'll explain soon.
@@ -50,8 +54,8 @@ func main() {
         motorState: false,
     }
 
-    println(car.Brand, car.Model, car.year, car.motorState)
-    // will show `Pagani Zonda R 2007 false`
+    fmt.Println(car)
+    // will show `{Pagani Zonda R 2007 false}`
 }
 ```
 
@@ -63,7 +67,7 @@ Methods in **Go** are functions specified for a `struct` type, which follow the 
 
 ```go
 func (car Car) Run() {
-    println(car.Brand, car.Model, "is running...")
+    fmt.Printf("%s %s is running...\n", car.Brand, car.Model)
 }
 ```
 
@@ -105,10 +109,10 @@ func (car Car) ToggleMotorState() {
     car.motorState = !car.motorState
 
     if (car.motorState) {
-        println("The car engine is on.")
+        fmt.Println("The car engine is on.")
         return
     }
-    println("The car engine is off.")
+    fmt.Println("The car engine is off.")
 }
 ```
 
@@ -151,7 +155,7 @@ Let's illustrate with the following function:
 ```go
 func increment(target, value int) {
     target += value
-    println(target)
+    fmt.Println(target)
 }
 ```
 
@@ -164,7 +168,7 @@ func main() {
     var x int = 5
 
     increment(x, 5) // it will show `10`
-    println(x) // but it's still `5`
+    fmt.Println(x) // but it's still `5`
 }
 ```
 
@@ -175,7 +179,7 @@ First, let's fix the previous function to correct this inconsistency:
 ```go
 func increment(target *int, value int) {
     *target += value
-    println(*target)
+    fmt.Println(*target)
 }
 ```
 
@@ -189,7 +193,7 @@ func main() {
 
     increment(&x, 5) // it will show `10`
     // what does `&` mean?
-    println(x) // now, it will also show `10`
+    fmt.Println(x) // now, it will also show `10`
 }
 ```
 
@@ -220,9 +224,9 @@ func main() {
     x := 5
     p_x := &x
 
-    println(x, *p_x) // only the stored values
-    println(&x, p_x) // the memory address of `x`
-    println(&p_x) // the memory address of `p_x`
+    fmt.Println(x, *p_x) // only the stored values
+    fmt.Println(&x, p_x) // the memory address of `x`
+    fmt.Println(&p_x) // the memory address of `p_x`
 }
 ```
 
@@ -253,10 +257,10 @@ func (car *Car) ToggleMotorState() {
     car.motorState = !car.motorState
 
     if (car.motorState) {
-        println("The car engine is on.")
+        fmt.Println("The car engine is on.")
         return
     }
-    println("The car engine is off.")
+    fmt.Println("The car engine is off.")
 }
 ```
 
@@ -307,13 +311,70 @@ func NewCar(brand, model string, year int, motorState bool) *Car {
 func main() {
     car := NewCar("Pagani", "Zonda R", 2007, false)
 
-    println(car.Brand, car.Model, car.year, car.motorState)
+    fmt.Println(car)
     // all fields filled out correctly
 }
 ```
 
 ## A Little About Interfaces
 
+Finally, I talk about another custom type in **Go**, which is **_interfaces_**!
+
+```go
+package main
+
+import "fmt"
+
+type Vehicle interface {
+    Run()
+    Ignition()
+}
+```
+
 ...
 
-Now you are ready to explore this repository however you want! If you'd like, you can see how the implementation of a data structure and its algorithms works [here](./TUTORIAL.md)!
+```go
+// ...
+
+type Car struct {
+    Brand string
+    Model string
+    year int
+    motorState bool
+}
+
+func (car *Car) Run() {
+    fmt.Printf("%s %s is running...\n", car.Brand, car.Model)
+}
+
+func (car *Car) Ignition() {
+    car.motorState = !car.motorState
+
+    if (car.motorState) {
+        fmt.Printf("The %s's engine is on.\n", car.Model)
+        return
+    }
+    fmt.Printf("The %s's engine is off.\n", car.Model)
+}
+```
+
+...
+
+```go
+// ...
+
+func main() {
+    var car Vehicle = &Car{
+        Brand: "Pagani",
+        Model: "Zonda R",
+        year: 2007,
+        motorState: false,
+    }
+    car.Ignition()
+    car.Run()
+}
+```
+
+...
+
+If you'd like, you can see how the implementation of a data structure and its algorithms works [here](./TUTORIAL.md). Before showing the implementation, I address some other details that I didn't mention earlier.
