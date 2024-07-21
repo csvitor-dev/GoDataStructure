@@ -23,6 +23,7 @@ Well, but to be more specific. Let's create an example that will be useful for t
 ```go
 package main
 
+// using the package I had said before, remember?
 import "fmt"
 
 type Car struct {
@@ -35,7 +36,7 @@ type Car struct {
 // ...
 ```
 
-> I know, I know... Some properties have the first letter capitalized, while others don't. But it's not just an aesthetic detail, I'll explain soon.
+> I know, I know... Some properties have the first letter capitalized, while others don't. But it's not just an aesthetic detail, **it's also a consequence of visibility**.
 
 The above `struct` declaration is a classic example. Basically, the `struct` **Car** is a _blueprint_ for variable of this type.
 
@@ -211,9 +212,9 @@ By definition, _pointers_ are special variables that store the memory address of
 
 Two characters are used for this _memory reference_ purpose: `*`and `&`.
 
-> `*` -> **represents both the declaration of a pointer and _the dereference operation_** ¹;
+> `*` := **represents both the declaration of a pointer and _the dereference operation_** ¹;
 >
-> `&` -> **accesses the memory address of the variable it accompanies, _it is the expected value for a pointer_**;
+> `&` := **accesses the memory address of the variable it accompanies, _it is the expected value for a pointer_**;
 
 ¹ It's called _dereferencing_ when, from the pointer, we access the value of the variable it refers to.
 
