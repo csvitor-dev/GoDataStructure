@@ -321,6 +321,12 @@ func main() {
 
 Finally, I talk about another custom type in **Go**, which is **_interfaces_**!
 
+**_Interfaces_** are another essential feature in **Go**, allowing _code decoupling_ and _type upcasting_. Unlike other **_object-oriented programming languages_**, the implementation of interfaces in **Golang** is _implicit_ and depends on whether a structure holds the declaration of a function that was defined in the interface.
+
+But your concept is the same: _interfaces_ **define contracts** in which, to be implemented, it is necessary for all its methods to be declared by the implementing type.
+
+For example, check out the `Vehicle` interface:
+
 ```go
 package main
 
@@ -332,7 +338,9 @@ type Vehicle interface {
 }
 ```
 
-...
+Therefore, every type that implements this interface will have to include all methods (`Run()` and `Ignition()`, in the example above)!
+
+Now, let's reintroduce our `struct` Car with a constructor and some methods.
 
 ```go
 // ...
@@ -342,6 +350,15 @@ type Car struct {
     Model string
     year int
     motorState bool
+}
+
+func NewCar(brand, model string, year int, motorState bool) *Car {
+    return &Car{
+        Brand: brand,
+        Model: model,
+        year: year,
+        motorState: motorState,
+    }
 }
 
 func (car *Car) Run() {
@@ -359,23 +376,23 @@ func (car *Car) Ignition() {
 }
 ```
 
-...
+And at the entry point, we see that the instance declaration of the car was done is a variable of type `Vehicle` (`var car Vehicle`), meaning that `Car` implements this interface (even if implicitly).
 
 ```go
 // ...
 
 func main() {
-    var car Vehicle = &Car{
-        Brand: "Pagani",
-        Model: "Zonda R",
-        year: 2007,
-        motorState: false,
-    }
+    var car Vehicle = NewCar(
+        "Pagani",
+        "Zonda R",
+        2007,
+        false,
+    )
     car.Ignition()
     car.Run()
 }
 ```
 
-...
+> It is important to note that even though it is an implicit implementation, the typing (for example, `var car Vehicle = NewCar()`) is already defined at compile time!
 
-If you'd like, you can see how the implementation of a data structure and its algorithms works [here](./TUTORIAL.md). Before showing the implementation, I address some other details that I didn't mention earlier.
+If you'd like, you can see how the implementation of a data structure and its algorithms works [**here**](./TUTORIAL.md). Before showing the implementation, I address some other details that I didn't mention earlier.
