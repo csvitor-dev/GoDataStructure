@@ -144,5 +144,78 @@ func Sum[T int | float64 | float32](t ...T) T {
 ## Implementation (for real)
 
 Now, let's get to work!
+So, let's start with the definition of a _linked list_.
+
+> A linked list is a linear and dynamic data structure that, unlike _array_, does not require each **memory cell** (the space in memory dedicated to storing a **node** -- the data in question) to be contiguous\*.
+> Therefore, insertion and deletion operations are done at runtime with `O(n)` complexity in the worst case.
+
+\* For example, in **Go**, the data structure called an _array_ in defined statically as `[n]type`, where the parameter `n` is an integer that specifies how many **cells** (of certain data type) should be stored in memory at compile time.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    array := [5]int{1, 2, 3} // it isn't necessary to assign all fields, they will receive a zero value
+    fmt.Println(array, len(array)) // it will show `[1 2 3 0 0] 5`
+    array[9] = 7; // ❌ this statement will generate a compile-time error because index `9`doesn't exist
+}
+```
+
+```bash
+# command-line-arguments
+...: invalid argument: index 5 out of bounds [0:5]
+```
+
+Linked lists can be seen as _slices_ (the dynamic data structure in **Go**) from a memory behavior perspective: memory is allocated dynamically.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    slice := []int{2, 3, 5} // the size of the structure is not defined
+    fmt.Println(slice, len(slice)) // it will show `[2 3 5] 3`
+
+    slice = append(slice, 7) // a new value is added to the slice
+    fmt.Println(slice, len(slice)) // now, it will show `[2 3 5 7] 4`
+}
+```
+
+The main advantage of using linked lists (or other dynamic structures) is scalability:
+if an application grows (in terms of users consuming or requesting it, for example),
+**a list won't be limited by allocated memory -- as long as the machine provides enough memory**.
+
+### Inception
+
+> In this topic, I will try to follow the same pattern that I added in my implementation.
+
+The first step of our project is to define the _smallest unit_ of the linked list: **the node**.
+
+For abstraction reasons, a **node** can be seen as _a structure containing **the definition of data to be stored** and **a pointer
+of its own type**_. If we imagine enough, we can already see the data structure being built from these _pointers_!
+
+Viewing a node, it would be something like this:
+
+<p align="center">
+<img width="265" src="../assets/node_struct.png" alt="Definition of node"/>
+</p>
+
+Or from the declaration of the structure:
+
+> Assuming you have created your project, create a file `node.go` in `./linked-list/node/` and add the code below:
+
+```go
+package node
+
+type Node[T int | float64 | string] struct {
+    Data T
+    Next *Node
+}
+```
+
+...
 
 [//]: # "implementar a singly linked list de forma detalhada"
