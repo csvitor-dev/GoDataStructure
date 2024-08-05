@@ -212,10 +212,103 @@ package node
 
 type Node[T int | float64 | string] struct {
     Data T
-    Next *Node
+    Next *Node[T]
 }
 ```
 
+An alternative to reduce the number of types we define as generic is to declare an interface for this purpose.
+
+> Create a new file `types.go` in the same package `node`:
+
+```go
+package node
+
+type Number interface {
+    int | float32 | float64
+}
+```
+
+As a result, the `Node` structure would look like this:
+
+```go
+// ...
+
+type Node[T Number | string] struct {
+    // ...
+}
+```
+
+Now we can create the concept of a **singly linked list**:
+
+> In another package (`linked-list/collections`), a file called `singly_linked_list.go` will be created:
+
+```go
+package collections
+
+import "linked-list/node"
+
+type SinglyLinkedList[T node.Number | string] struct {
+    head   *node.Node[T]
+    tail   *node.Node[T]
+    length int
+}
+```
+
+Or through a visual representation:
+
+<p align="center">
+<img width="265" src="../assets/SLL_struct.png" alt="Definition of singly linked list"/>
+</p>
+
+> In the modeling of this concept, I considered that the list allows for two pointers (one for each end),
+> the _head_ and _tail_ of the list. But it is completely feasible to implement it with a single node, the _head_.
+
+### Construction
+
+Before that, let's take a step thinking about the **_customer code_**, without needing to manually
+inialize a _list pointer_ every time you want a new list. Let's create a constructor (remember that?)!
+
+```go
+package collections
+
+// ...
+
+func NewSinglyLinkedList[T node.Number | string]() *SinglyLinkedList[T] {
+    return &SinglyLinkedList[T]{
+        head: nil,
+        tail: nil,
+        length: 0,
+    }
+}
+```
+
+And since the list has a constructor, the node also needs one.
+
+```go
+package node
+
+// ...
+
+func NewNode[T Number | string](data T) *Node[T] {
+    return &Node[T]{
+        Data: data,
+        Next: nil,
+    }
+}
+```
+
+> Unlike the list constructor, the node constructor has parameters . It initializes the data it stores.
+
+Now we can start implementing the list manipulation methods (`add`, `remove` and `print`)!
+
+### `Add` Method 
+
 ...
 
-[//]: # "implementar a singly linked list de forma detalhada"
+### `Remove` Method
+
+...
+
+### `Print` Method
+
+...
