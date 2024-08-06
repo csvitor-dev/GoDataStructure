@@ -265,7 +265,7 @@ Or through a visual representation:
 
 ### Construction
 
-Before that, let's take a step thinking about the **_customer code_**, without needing to manually
+Before anything else, let's take a step thinking about the **_customer code_**, without needing to manually
 inialize a _list pointer_ every time you want a new list. Let's create a constructor (remember that?)!
 
 ```go
@@ -301,7 +301,29 @@ func NewNode[T Number | string](data T) *Node[T] {
 
 Now we can start implementing the list manipulation methods (`add`, `remove` and `print`)!
 
-### `Add` Method 
+### `Add` Method
+
+Let's create our first method in the `collections` package: the `Add` method!
+
+> One important point: in my implementation, I made some distinctions in the methods (for example, in the `Add` and `InsertAt` methods which have some differences), but here **there will be a single insertion method and a single deletion method**.
+
+The linked list allows for three cases of inserting an element: at the _head_, in the _middle_, or at the _tail_.
+Inserting at both ends is **_constant_** (that is, in terms of **_time complexity_**, it is **O(1)** -- if you're confused, look up [**Computational Complexity**](https://en.wikipedia.org/wiki/Computational_complexity) and [**Big-O Notation**](https://en.wikipedia.org/wiki/Big_O_notation)), while insertion in the middle is **_linear_**
+(or, more precisely, **O(n)**).
+
+> Besides the code, I will also include visual representations. Since the pointers will store the addresses of structures,
+> I will use an _arrow_ to represent that.
+>
+> Instead:
+>
+> <p align="center">
+> <img width="250" src="../assets/with_pointers.png" alt="Using memory addresses"/>
+> </p>
+> I'll use this:
+>
+> <p align="center">
+> <img width="250" src="../assets/with_arrows.png" alt="Using arrows as abstraction"/>
+> </p>
 
 ...
 
