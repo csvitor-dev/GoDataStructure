@@ -13,7 +13,6 @@ var (
 
 type singlyLinkedList[Type node.Number | string] struct {
 	head   *node.SingleNode[Type]
-	tail   *node.SingleNode[Type]
 	length int
 }
 
@@ -21,7 +20,6 @@ type singlyLinkedList[Type node.Number | string] struct {
 func NewSinglyLinkedList[Type node.Number | string]() *singlyLinkedList[Type] {
 	linkedList := &singlyLinkedList[Type]{
 		head: nil,
-		tail: nil,
 		length: 0,
 	}
 	return linkedList
@@ -34,9 +32,9 @@ func (linkedList *singlyLinkedList[Type]) Add(data Type) {
 	if (linkedList.length == 0) {
 		linkedList.head = node
 	} else {
-		linkedList.tail.Next = node
+		hookAtLastIndex := linkedList.searchNode(linkedList.length)
+		hookAtLastIndex.Next = node
 	}
-	linkedList.tail = node
 	linkedList.length++
 }
 
@@ -75,10 +73,6 @@ func (linkedList *singlyLinkedList[Type]) Delete() (Type, error) {
 	hook := linkedList.head
 	linkedList.head = hook.Next
 
-	if (linkedList.length == 1) {
-		linkedList.tail = hook.Next
-	}
-
 	data = hook.Data
 	hook.Next = nil
 
@@ -97,17 +91,12 @@ func (linkedList *singlyLinkedList[Type]) RemoveAt(index int) (Type, error) {
 	if (index == 0) {
 		return linkedList.Delete()
 	}
-
-	hookAtIndex := linkedList.searchNode(index)
-
-	if (hookAtIndex.Next == linkedList.tail) {
-		linkedList.tail = hookAtIndex
-	}
-	data = hookAtIndex.Next.Data
-
-	hook := hookAtIndex.Next
-	hookAtIndex.Next = hook.Next
-	hook.Next = nil
+	hook := linkedList.searchNode(index)
+	hookAtIndex := hook.Next
+	
+	data = hookAtIndex.Data
+	hook.Next = hookAtIndex.Next
+	hookAtIndex.Next = nil
 
 	linkedList.length--
 	return data, nil
