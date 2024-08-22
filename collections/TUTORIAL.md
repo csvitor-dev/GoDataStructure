@@ -59,8 +59,8 @@ There are two ways to define custom error messages: with the `Errorf()` function
 package main
 
 import (
-    "fmt"
     "errors"
+    "fmt"
 )
 
 // with `fmt` pkg
@@ -249,7 +249,6 @@ import "linked-list/node"
 
 type SinglyLinkedList[T node.Number | string] struct {
     head   *node.Node[T]
-    tail   *node.Node[T]
     length int
 }
 ```
@@ -260,8 +259,8 @@ Or through a visual representation:
 <img width="265" src="../assets/SLL_struct.png" alt="Definition of singly linked list"/>
 </p>
 
-> In the modeling of this concept, I considered that the list allows for two pointers (one for each end),
-> the _head_ and _tail_ of the list. But it is completely feasible to implement it with a single node, the _head_.
+> In the modeling of this concept, I considered that the list allows only one pointers (just for the beginning),
+> the _head_ of the list. But it is completely feasible to implement it with two nodes, the _head_ and the _tail_.
 
 ### Construction
 
@@ -276,7 +275,6 @@ package collections
 func NewSinglyLinkedList[T node.Number | string]() *SinglyLinkedList[T] {
     return &SinglyLinkedList[T]{
         head: nil,
-        tail: nil,
         length: 0,
     }
 }
@@ -305,10 +303,13 @@ Now we can start implementing the list manipulation methods (`add`, `remove` and
 
 Let's create our first method in the `collections` package: the `Add` method!
 
-> One important point: in my implementation, I made some distinctions in the methods (for example, in the `Add` and `InsertAt` methods which have some differences), but here **there will be a single insertion method and a single deletion method**.
+> One important point: in my implementation, I made some distinctions in the methods (for example, in the `Add` and `InsertAt`
+> methods which have some differences), but here **there will be a single insertion method and a single deletion method**.
 
-The linked list allows for three cases of inserting an element: at the _head_, in the _middle_, or at the _tail_.
-Inserting at both ends is **_constant_** (that is, in terms of **_time complexity_**, it is **O(1)** -- if you're confused, look up [**Computational Complexity**](https://en.wikipedia.org/wiki/Computational_complexity) and [**Big-O Notation**](https://en.wikipedia.org/wiki/Big_O_notation)), while insertion in the middle is **_linear_**
+The linked list allows for three cases of inserting an element: at the _head_, in the _middle_, or at the _tail_ (which can treated the same way as the _middle_).
+Inserting at the head is **_constant_** (that is, in terms of **_time complexity_**, it is **O(1)** -- if you're confused, look up
+[**Computational Complexity**](https://en.wikipedia.org/wiki/Computational_complexity) and
+[**Big-O Notation**](https://en.wikipedia.org/wiki/Big_O_notation)), while insertion in the middle and at the tail the is **_linear_**
 (or, more precisely, **O(n)**).
 
 > Besides the code, I will also include visual representations. Since the pointers will store the addresses of structures,
@@ -325,12 +326,218 @@ Inserting at both ends is **_constant_** (that is, in terms of **_time complexit
 > <img width="250" src="../assets/with_arrows.png" alt="Using arrows as abstraction"/>
 > </p>
 
-...
+So, let's start with the _signature of our method_: what is needed? **I know we need to pass data to be stored**
+(which will consequently create a node within this method). But I can't just add a node after another
+(otherwise, it would be a **_queue_**), **I need to specify the desired position**.
+
+We identified two _requirements_:
+
+1. add a node to the list with the data passed as a parameter;
+2. Add that node at the specified position.
+
+Great, we have the following declaration from our method so far:
+
+```go
+package collections
+
+// ...
+
+func (list *SinglyLinkedList[T]) Add(index int, data T) <?> {
+    // ...
+}
+```
+
+> But does the method return anything? And if the entered position is invalid?
+> We can already come up with a solution.
+
+```go
+package collections
+
+import (
+    "linked-list/node"
+    "errors"
+)
+// ...
+
+func (list *SinglyLinkedList[T]) isValidIndexForAdd(index int) bool {
+    return index >= 0 && index <= list.length
+}
+
+func (list *SinglyLinkedList[T]) Add(index int, data T) error {
+    if !list.isValidIndexForAdd(index) {
+        return errors.New("error: out of range index")
+    }
+
+    // ...
+
+    return nil
+}
+```
+
+Let's start with the base case: _inserting at the head of the list_.
+
+The initial insertion is **constant**, but it happens in two cases:
+
+1. when the _length_ of the list is **0**; or
+2. when the _provided index_ is **0**.
+
+For the first case:
+
+<p align="center">
+<img width="250" src="../assets/empty.png" alt=""/>
+</p>
+
+<p align="center">
+<img width="250" src="../assets/empty(2).png" alt=""/>
+</p>
+
+Or for the second case:
+
+<p align="center">
+<img width="250" src="../assets/begin-insertion.png" alt=""/>
+</p>
+
+<p align="center">
+<img width="250" src="../assets/begin-insertion(2).png" alt=""/>
+</p>
+
+But the insertion in the middle (`i = 1, 2, ..., n-1`) or at the end (`i = n`) is **linear**, so they happen in
+a similar way -- therefore, the same steps are followed:
+
+1. the first step is **to reach the element before position _k_** (that is, at **_k-1_**) with a _**hook pointer**_
+   of type `Node`;
+2. already with the pointer of **the node to be inserted, point it to the _k-th_ node**;
+3. finally, **the element at _k-1_ now points from _k_ to the node to be inserted**.
+
+<p align="center">
+<img width="300" src="../assets/middle-insertion.png" alt=""/>
+</p>
+
+<p align="center">
+<img width="300" src="../assets/middle-insertion(2).png" alt=""/>
+</p>
+
+At the end, it's the same implementation, but the visual proof is different:
+
+<p align="center">
+<img width="250" src="../assets/end-insertion.png" alt=""/>
+</p>
+
+<p align="center">
+<img width="300" src="../assets/end-insertion(2).png" alt=""/>
+</p>
+
+Here is the sample code:
+
+```go
+package collections
+
+// ...
+
+func (list *SinglyLinkedList[T]) Add(index int, data T) error {
+    if !list.isValidIndexForAdd(index) {
+        return errors.New("error: out of range index")
+    }
+    newNode := NewNode[T](data)
+
+    if list.length == 0 {
+        list.head = newNode
+    } else if index == 0 {
+        newNode.Next = list.head
+        list.head = newNode
+    } else {
+         hook := list.searchPreviousNode(index)
+
+         newNode.Next = hook.Next
+         hook.Next = newNode
+    }
+
+    list.length++
+    return nil
+}
+
+// ...
+
+func (list *SinglyLinkedList[T]) searchPreviousNode(index int) *node.Node[T] {
+    searcher := list.head
+
+    for (index - 1 > 0) {
+        searcher = searcher.Next
+        index--
+    }
+    return searcher
+}
+```
 
 ### `Remove` Method
 
-...
+Create the method `Remove` _as an implementation exercise with visual proofs_, given the implementation
+of the method `Add`.
+
+Here is the sample code for comparison purposes:
+
+```go
+package collections
+
+func (list *SinglyLinkedList[T]) isValidIndexForRemove(index int) bool {
+    return index >= 0 && index < list.length
+}
+
+func (list *SinglyLinkedList[T]) Remove(index int) (T, error) {
+    var data T
+
+    if list.length == 0 {
+        return data, errors.New("error: list is empty")
+    }
+
+    if !list.isValidIndexForRemove(index) {
+        return data, errors.New("error: list is empty")
+    }
+    hook := list.searchPreviousNode(index)
+
+    if index == 0 {
+        list.head = hook.Next
+    } else {
+        hookAtPreviousIndex := hook
+        hook = hook.Next
+        hookAtPreviousIndex.Next = hook.Next
+    }
+    data = hook.Data
+    hook.Next = nil
+
+    list.length--
+    return data, nil
+}
+```
 
 ### `Print` Method
 
-...
+Unlike all the other methods, this one is quite simple: just go through the list (passing through each node) and print it data.
+
+The complete implementation is intuitive:
+
+```go
+package collections
+
+import (
+    "linked-list/node"
+    "errors"
+    "fmt"
+)
+
+// ...
+
+func (list *SinglyLinkedList[T]) Print() {
+    hook := list.head
+
+    for (hook != nil) {
+        fmt.Printf("%v, ", hook.Data)
+        hook = hook.Next
+    }
+    fmt.Printf("Length: %v\n", list.length)
+}
+```
+
+**We finally reached the end of this great journey!**
+
+I hope you've learned as much as I have during this process. Now it's up to you to explore this repository and make your own implementationns (and maybe even add a testing layer, just like a suggestion).
