@@ -127,11 +127,9 @@ func (linkedList *singlyLinkedList[Type]) isValidIndexRemove(index int) bool {
 func (linkedList *singlyLinkedList[Type]) searchNode(index int) (*node.SingleNode[Type]) {
 	hook := linkedList.head
 
-	for {
-		if (index - 1 == 0) {
-			return hook
-		}
+	for (index - 1 > 0) {
 		hook = hook.Next
 		index--
 	}
+	return hook
 }
