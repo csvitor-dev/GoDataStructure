@@ -5,14 +5,14 @@ import (
 	"fmt"
 )
 
-type doublyLinkedList[Type node.Number | string] struct {
+type doublyLinkedList[Type node.T] struct {
 	head   *node.DoubleNode[Type]
 	tail   *node.DoubleNode[Type]
 	length int
 }
 
 // NewDoublyLinkedList: create new instance of doublyLinkedList[Type]
-func NewDoublyLinkedList[Type node.Number | string]() *doublyLinkedList[Type] {
+func NewDoublyLinkedList[Type node.T]() *doublyLinkedList[Type] {
 	linkedList := &doublyLinkedList[Type]{
 		head: nil,
 		tail: nil,

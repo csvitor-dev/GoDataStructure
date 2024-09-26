@@ -11,13 +11,13 @@ var (
 )
 
 // LIFO - Last In, First Out
-type stack[Type node.Number | string] struct {
+type stack[Type node.T] struct {
 	head   *node.SingleNode[Type]
 	length int
 }
 
 // NewStack: create new instance of stack[Type]
-func NewStack[Type node.Number | string]() *stack[Type] {
+func NewStack[Type node.T]() *stack[Type] {
 	stack := &stack[Type]{
 		head: nil,
 		length: 0,

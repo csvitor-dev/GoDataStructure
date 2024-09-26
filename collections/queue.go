@@ -11,14 +11,14 @@ var (
 )
 
 // FIFO - First In, First Out
-type queue[Type node.Number | string] struct {
+type queue[Type node.T] struct {
 	head   *node.SingleNode[Type]
 	tail   *node.SingleNode[Type]
 	length int
 }
 
 // NewQueue: create new instance of queue[Type]
-func NewQueue[Type node.Number | string]() *queue[Type] {
+func NewQueue[Type node.T]() *queue[Type] {
 	queue := &queue[Type]{
 		head: nil,
 		tail: nil,

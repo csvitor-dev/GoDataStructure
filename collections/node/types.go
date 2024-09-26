@@ -1,5 +1,9 @@
 package node
 
-type Number interface {
+type number interface {
 	int | float64
+}
+
+type T interface {
+	string | number
 }

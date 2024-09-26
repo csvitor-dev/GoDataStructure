@@ -11,13 +11,13 @@ var (
 	errEmptyList error = errors.New("linked list is empty")
 )
 
-type singlyLinkedList[Type node.Number | string] struct {
+type singlyLinkedList[Type node.T] struct {
 	head   *node.SingleNode[Type]
 	length int
 }
 
 // NewSinglyLinkedList: create new instance of singlyLinkedList[Type]
-func NewSinglyLinkedList[Type node.Number | string]() *singlyLinkedList[Type] {
+func NewSinglyLinkedList[Type node.T]() *singlyLinkedList[Type] {
 	linkedList := &singlyLinkedList[Type]{
 		head: nil,
 		length: 0,
