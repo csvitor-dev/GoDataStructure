@@ -1,4 +1,4 @@
-package node
+package types
 
 type number interface {
 	int | float64

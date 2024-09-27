@@ -1,4 +1,4 @@
-package node
+package types
 
 type DoubleNode[Type T] struct {
 	Data     Type

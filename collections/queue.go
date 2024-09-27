@@ -1,7 +1,7 @@
 package collections
 
 import (
-	"GoDataStructure/collections/node"
+	t "GoDataStructure/collections/types"
 	"errors"
 	"fmt"
 )
@@ -11,14 +11,14 @@ var (
 )
 
 // FIFO - First In, First Out
-type queue[Type node.T] struct {
-	head   *node.SingleNode[Type]
-	tail   *node.SingleNode[Type]
+type queue[Type t.T] struct {
+	head   *t.SingleNode[Type]
+	tail   *t.SingleNode[Type]
 	length int
 }
 
 // NewQueue: create new instance of queue[Type]
-func NewQueue[Type node.T]() *queue[Type] {
+func NewQueue[Type t.T]() *queue[Type] {
 	queue := &queue[Type]{
 		head: nil,
 		tail: nil,
@@ -29,7 +29,7 @@ func NewQueue[Type node.T]() *queue[Type] {
 
 // Enqueue: adds a new SingleNode[Type] to the queue[Type] - O(1)
 func (queue *queue[Type]) Enqueue(data Type) {
-	node := node.NewSingleNode(data)
+	node := t.NewSingleNode(data)
 	
 	if (queue.length == 0) {
 		queue.head = node

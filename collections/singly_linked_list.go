@@ -1,7 +1,7 @@
 package collections
 
 import (
-	"GoDataStructure/collections/node"
+	t "GoDataStructure/collections/types"
 	"errors"
 	"fmt"
 )
@@ -11,13 +11,13 @@ var (
 	errEmptyList error = errors.New("linked list is empty")
 )
 
-type singlyLinkedList[Type node.T] struct {
-	head   *node.SingleNode[Type]
+type singlyLinkedList[Type t.T] struct {
+	head   *t.SingleNode[Type]
 	length int
 }
 
 // NewSinglyLinkedList: create new instance of singlyLinkedList[Type]
-func NewSinglyLinkedList[Type node.T]() *singlyLinkedList[Type] {
+func NewSinglyLinkedList[Type t.T]() *singlyLinkedList[Type] {
 	linkedList := &singlyLinkedList[Type]{
 		head: nil,
 		length: 0,
@@ -27,7 +27,7 @@ func NewSinglyLinkedList[Type node.T]() *singlyLinkedList[Type] {
 
 // Add: adds a new SingleNode[Type] to the singlyLinkedList[Type], default insertion - 0(1)
 func (linkedList *singlyLinkedList[Type]) Add(data Type) {
-	node := node.NewSingleNode(data)
+	node := t.NewSingleNode(data)
 
 	if (linkedList.length == 0) {
 		linkedList.head = node
@@ -48,7 +48,7 @@ func (linkedList *singlyLinkedList[Type]) InsertAt(index int, data Type) error {
 		linkedList.Add(data)
 		return nil
 	}
-	node := node.NewSingleNode(data)
+	node := t.NewSingleNode(data)
 
 	if (index == 0) {
 		node.Next = linkedList.head
@@ -124,7 +124,7 @@ func (linkedList *singlyLinkedList[Type]) isValidIndexRemove(index int) bool {
 }
 
 // searchNode: searches for SingleNode[Type] in the valid index and returns the reference of the node before it
-func (linkedList *singlyLinkedList[Type]) searchNode(index int) (*node.SingleNode[Type]) {
+func (linkedList *singlyLinkedList[Type]) searchNode(index int) (*t.SingleNode[Type]) {
 	hook := linkedList.head
 
 	for (index - 1 > 0) {

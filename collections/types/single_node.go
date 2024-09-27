@@ -1,4 +1,4 @@
-package node
+package types
 
 type SingleNode[Type T] struct {
 	Data Type

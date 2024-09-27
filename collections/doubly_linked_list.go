@@ -1,18 +1,18 @@
 package collections
 
 import (
-	"GoDataStructure/collections/node"
+	t "GoDataStructure/collections/types"
 	"fmt"
 )
 
-type doublyLinkedList[Type node.T] struct {
-	head   *node.DoubleNode[Type]
-	tail   *node.DoubleNode[Type]
+type doublyLinkedList[Type t.T] struct {
+	head   *t.DoubleNode[Type]
+	tail   *t.DoubleNode[Type]
 	length int
 }
 
 // NewDoublyLinkedList: create new instance of doublyLinkedList[Type]
-func NewDoublyLinkedList[Type node.T]() *doublyLinkedList[Type] {
+func NewDoublyLinkedList[Type t.T]() *doublyLinkedList[Type] {
 	linkedList := &doublyLinkedList[Type]{
 		head: nil,
 		tail: nil,
@@ -23,7 +23,7 @@ func NewDoublyLinkedList[Type node.T]() *doublyLinkedList[Type] {
 
 // Add: adds a new DoubleNode[Type] to the doublyLinkedList[Type], default insertion - 0(1)
 func (linkedList *doublyLinkedList[Type]) Add(data Type) {
-	node := node.NewDoubleNode(data)
+	node := t.NewDoubleNode(data)
 
 	if (linkedList.length == 0) {
 		linkedList.head = node
@@ -45,7 +45,7 @@ func (linkedList *doublyLinkedList[Type]) InsertAt(index int, data Type) error {
 		linkedList.Add(data)
 		return nil
 	}
-	node := node.NewDoubleNode(data)
+	node := t.NewDoubleNode(data)
 
 	if (index == 0) {
 		node.Next = linkedList.head
@@ -168,7 +168,7 @@ func (linkedList *doublyLinkedList[Type]) isValidIndexRemove(index int) bool {
 }
 
 // searchNode: searches for DoubleNode[Type] in the valid index and returns the reference of the node before it
-func (linkedList *doublyLinkedList[Type]) searchNode(index int) (*node.DoubleNode[Type]) {
+func (linkedList *doublyLinkedList[Type]) searchNode(index int) (*t.DoubleNode[Type]) {
 	hook := linkedList.head
 
 	for {

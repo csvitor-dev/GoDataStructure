@@ -1,7 +1,7 @@
 package collections
 
 import (
-	"GoDataStructure/collections/node"
+	t "GoDataStructure/collections/types"
 	"errors"
 	"fmt"
 )
@@ -11,13 +11,13 @@ var (
 )
 
 // LIFO - Last In, First Out
-type stack[Type node.T] struct {
-	head   *node.SingleNode[Type]
+type stack[Type t.T] struct {
+	head   *t.SingleNode[Type]
 	length int
 }
 
 // NewStack: create new instance of stack[Type]
-func NewStack[Type node.T]() *stack[Type] {
+func NewStack[Type t.T]() *stack[Type] {
 	stack := &stack[Type]{
 		head: nil,
 		length: 0,
@@ -27,7 +27,7 @@ func NewStack[Type node.T]() *stack[Type] {
 
 // Push: adds a new SingleNode[Type] at the top of the stack[Type] - O(1)
 func (stack *stack[Type]) Push(data Type) {
-	node := node.NewSingleNode(data)
+	node := t.NewSingleNode(data)
 
 	node.Next = stack.head
 	stack.head = node
