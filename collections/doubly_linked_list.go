@@ -22,160 +22,160 @@ func NewDoublyLinkedList[Type t.T]() *doublyLinkedList[Type] {
 }
 
 // Add: adds a new DoubleNode[Type] to the doublyLinkedList[Type], default insertion - 0(1)
-func (linkedList *doublyLinkedList[Type]) Add(data Type) {
+func (ll *doublyLinkedList[Type]) Add(data Type) {
 	node := t.NewDoubleNode(data)
 
-	if (linkedList.length == 0) {
-		linkedList.head = node
+	if (ll.length == 0) {
+		ll.head = node
 	} else {
-		linkedList.tail.Next = node
-		node.Previous = linkedList.tail
+		ll.tail.AddReferenceOnNext(node)
+		node.AddReferenceOnPrevious(ll.tail)
 	}
-	linkedList.tail = node
-	linkedList.length++
+	ll.tail = node
+	ll.length++
 }
 
 // InsertAt: adds a new DoubleNode[Type] to the doublyLinkedList[Type] in the index if it is valid, otherwise return error - O(n)
-func (linkedList *doublyLinkedList[Type]) InsertAt(index int, data Type) error {
-	if (!linkedList.isValidIndexInsert(index)) {
+func (ll *doublyLinkedList[Type]) InsertAt(index int, data Type) error {
+	if (!ll.isValidIndexInsert(index)) {
 		return errOutOfRangeIndex
 	}
 
-	if (index == linkedList.length) {
-		linkedList.Add(data)
+	if (index == ll.length) {
+		ll.Add(data)
 		return nil
 	}
 	node := t.NewDoubleNode(data)
 
 	if (index == 0) {
-		node.Next = linkedList.head
-		linkedList.head.Previous = node
-		linkedList.head = node
+		node.AddReferenceOnNext(ll.head)
+		ll.head.AddReferenceOnPrevious(node)
+		ll.head = node
 	} else {
-		hookAtIndex := linkedList.searchNode(index)
-		node.Next = hookAtIndex.Next
-		node.Previous = hookAtIndex
-		hookAtIndex.Next.Previous = node
-		hookAtIndex.Next = node
+		hookAtIndex := ll.searchNode(index)
+		node.AddReferenceOnNext(hookAtIndex.Next())
+		node.AddReferenceOnPrevious(hookAtIndex)
+		hookAtIndex.Next().AddReferenceOnPrevious(node)
+		hookAtIndex.AddReferenceOnNext(node)
 	}
-	linkedList.length++
+	ll.length++
 	return nil
 }
 
 // Delete: removes the first element in the list, returning the data to the DoubleNode[Type], default remotion - O(1)
-func (linkedList *doublyLinkedList[Type]) Delete() (Type, error) {
+func (ll *doublyLinkedList[Type]) Delete() (Type, error) {
 	var data Type
 
-	if (linkedList.length == 0) {
+	if (ll.length == 0) {
 		return data, errEmptyList
 	}
 
-	hook := linkedList.head
-	linkedList.head = hook.Next
+	hook := ll.head
+	ll.head = hook.Next()
 
-	if (linkedList.head != nil) {
-		linkedList.head.Previous = nil
+	if (ll.head != nil) {
+		ll.head.AddReferenceOnPrevious(nil)
 	}
 
-	if (linkedList.length == 1) {
-		linkedList.tail = hook.Previous
+	if (ll.length == 1) {
+		ll.tail = hook.Previous()
 	}
 
-	data = hook.Data
-	hook.Next = nil
+	data = hook.Data()
+	hook.AddReferenceOnNext(nil)
 
-	linkedList.length--
+	ll.length--
 	return data, nil
 }
 
 // RemoveAt: removes the element of the doublyLinkedList[Type] in the valid index returning it, otherwise return error - O(n)
-func (linkedList *doublyLinkedList[Type]) RemoveAt(index int) (Type, error) {
+func (ll *doublyLinkedList[Type]) RemoveAt(index int) (Type, error) {
 	var data Type
 
-	if (!linkedList.isValidIndexRemove(index)) {
+	if (!ll.isValidIndexRemove(index)) {
 		return data, errOutOfRangeIndex
 	}
 
 	if (index == 0) {
-		return linkedList.Delete()
+		return ll.Delete()
 	}
 
-	hookAtIndex := linkedList.searchNode(index)
+	hookAtIndex := ll.searchNode(index)
 
-	if (hookAtIndex.Next == linkedList.tail) {
-		linkedList.tail = hookAtIndex
+	if (hookAtIndex.Next() == ll.tail) {
+		ll.tail = hookAtIndex
 	}
-	data = hookAtIndex.Next.Data
+	data = hookAtIndex.Next().Data()
 
-	hook := hookAtIndex.Next
-	hookAtIndex.Next = hook.Next
+	hook := hookAtIndex.Next()
+	hookAtIndex.AddReferenceOnNext(hook.Next())
 
-	if (hook.Next != nil) {
-		hook.Next.Previous = hookAtIndex
+	if (hook.Next() != nil) {
+		hook.Next().AddReferenceOnPrevious(hookAtIndex)
 	}
-	hook.Next = nil
-	hook.Previous = nil
+	hook.AddReferenceOnNext(nil)
+	hook.AddReferenceOnPrevious(nil)
 
-	linkedList.length--
+	ll.length--
 	return data, nil
 }
 
 // Print: traverses through the doublyLinkedList[Type], printing the data to the existing DoubleNode[Type];
 // option parameter allows define the order of print: true is ascending and false is descending - O(n)
-func (linkedList *doublyLinkedList[Type]) Print(option bool) {
-	if (linkedList.length == 0) {
-		fmt.Printf("Length: %v\n", linkedList.length)
+func (ll *doublyLinkedList[Type]) Print(option bool) {
+	if (ll.length == 0) {
+		fmt.Printf("Length: %v\n", ll.length)
 		return
 	}
 	
 	if (option) {
-		linkedList.printAscendent()
+		ll.printAscendent()
 		return
 	}
-	linkedList.printDescendent()
+	ll.printDescendent()
 }
 
 // printAscendent: ...
-func (linkedList *doublyLinkedList[Type]) printAscendent() {
-	hook := linkedList.head
+func (ll *doublyLinkedList[Type]) printAscendent() {
+	hook := ll.head
 	
 	for (hook != nil) {
-		fmt.Printf("%v, ", hook.Data)
-		hook = hook.Next
+		fmt.Printf("%v, ", hook.Data())
+		hook = hook.Next()
 	}
-	fmt.Printf("Length: %v\n", linkedList.length)
+	fmt.Printf("Length: %v\n", ll.length)
 }
 
 // printDescendent: ...
-func (linkedList *doublyLinkedList[Type]) printDescendent() {
-	hook := linkedList.tail
+func (ll *doublyLinkedList[Type]) printDescendent() {
+	hook := ll.tail
 	
 	for (hook != nil) {
-		fmt.Printf("%v, ", hook.Data)
-		hook = hook.Previous
+		fmt.Printf("%v, ", hook.Data())
+		hook = hook.Previous()
 	}
-	fmt.Printf("Length: %v\n", linkedList.length)
+	fmt.Printf("Length: %v\n", ll.length)
 }
 
 // isValidIndexInsert: validates the index based in the list to InsertAt method
-func (linkedList *doublyLinkedList[Type]) isValidIndexInsert(index int) bool {
-	return index >= 0 && index <= linkedList.length
+func (ll *doublyLinkedList[Type]) isValidIndexInsert(index int) bool {
+	return index >= 0 && index <= ll.length
 }
 
 // isValidIndexRemove: validates the index based in the list to RemoveAt method
-func (linkedList *doublyLinkedList[Type]) isValidIndexRemove(index int) bool {
-	return index >= 0 && index < linkedList.length
+func (ll *doublyLinkedList[Type]) isValidIndexRemove(index int) bool {
+	return index >= 0 && index < ll.length
 }
 
 // searchNode: searches for DoubleNode[Type] in the valid index and returns the reference of the node before it
-func (linkedList *doublyLinkedList[Type]) searchNode(index int) (*t.DoubleNode[Type]) {
-	hook := linkedList.head
+func (ll *doublyLinkedList[Type]) searchNode(index int) (*t.DoubleNode[Type]) {
+	hook := ll.head
 
 	for {
 		if (index - 1 == 0) {
 			return hook
 		}
-		hook = hook.Next
+		hook = hook.Next()
 		index--
 	}
 }

@@ -34,7 +34,7 @@ func (queue *queue[Type]) Enqueue(data Type) {
 	if (queue.length == 0) {
 		queue.head = node
 	} else {
-		queue.tail.Next = node
+		queue.tail.AddReferenceOnNext(node)
 	}
 	queue.tail = node
 	queue.length++
@@ -47,12 +47,12 @@ func (queue *queue[Type]) Dequeue() (Type, error) {
 	if (queue.length == 0) {
 		return data, errEmptyQueue
 	}
-	data = queue.head.Data
+	data = queue.head.Data()
 
 	if (queue.length == 1) {
-		queue.tail = queue.tail.Next
+		queue.tail = queue.tail.Next()
 	}
-	queue.head = queue.head.Next
+	queue.head = queue.head.Next()
 	queue.length--
 
 	return data, nil
@@ -70,10 +70,10 @@ func (queue *queue[Type]) Contains(data Type) (bool, error) {
 		if (hook == nil) {
 			return false, nil
 		}
-		if (hook.Data == data) {
+		if (hook.Data() == data) {
 			return true, nil
 		}
-		hook = hook.Next
+		hook = hook.Next()
 	}
 }
 
@@ -82,8 +82,8 @@ func (queue *queue[Type]) Print() {
 	hook := queue.head
 
 	for (hook != nil) {
-		fmt.Printf("%v, ", hook.Data)
-		hook = hook.Next
+		fmt.Printf("%v, ", hook.Data())
+		hook = hook.Next()
 	}
 	fmt.Printf("Length: %v\n", queue.length)
 }

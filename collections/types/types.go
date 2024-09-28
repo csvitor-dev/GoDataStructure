@@ -7,3 +7,7 @@ type number interface {
 type T interface {
 	string | number
 }
+
+type NodeT[Type T] interface {
+	*SingleNode[Type] | *DoubleNode[Type]
+}

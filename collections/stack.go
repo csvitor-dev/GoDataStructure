@@ -29,7 +29,7 @@ func NewStack[Type t.T]() *stack[Type] {
 func (stack *stack[Type]) Push(data Type) {
 	node := t.NewSingleNode(data)
 
-	node.Next = stack.head
+	node.AddReferenceOnNext(stack.head)
 	stack.head = node
 	stack.length++
 }
@@ -41,8 +41,8 @@ func (stack *stack[Type]) Pop() (Type, error) {
 	if (stack.length == 0) {
 		return data, errEmptyStack
 	}
-	data = stack.head.Data
-	stack.head = stack.head.Next
+	data = stack.head.Data()
+	stack.head = stack.head.Next()
 	stack.length--
 
 	return data, nil
@@ -53,8 +53,8 @@ func (stack *stack[Type]) Print() {
 	hook := stack.head
 
 	for  (hook != nil) {
-		fmt.Printf("%v,\n", hook.Data)
-		hook = hook.Next
+		fmt.Printf("%v,\n", hook.Data())
+		hook = hook.Next()
 	}
 	fmt.Printf("Length: %v\n", stack.length)
 }

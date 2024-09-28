@@ -33,7 +33,7 @@ func (linkedList *singlyLinkedList[Type]) Add(data Type) {
 		linkedList.head = node
 	} else {
 		hookAtLastIndex := linkedList.searchNode(linkedList.length)
-		hookAtLastIndex.Next = node
+		hookAtLastIndex.AddReferenceOnNext(node)
 	}
 	linkedList.length++
 }
@@ -51,12 +51,12 @@ func (linkedList *singlyLinkedList[Type]) InsertAt(index int, data Type) error {
 	node := t.NewSingleNode(data)
 
 	if (index == 0) {
-		node.Next = linkedList.head
+		node.AddReferenceOnNext(linkedList.head)
 		linkedList.head = node
 	} else {
 		hookAtIndex := linkedList.searchNode(index)
-		node.Next = hookAtIndex.Next
-		hookAtIndex.Next = node
+		node.AddReferenceOnNext(hookAtIndex.Next())
+		hookAtIndex.AddReferenceOnNext(node)
 	}
 	linkedList.length++
 	return nil
@@ -71,10 +71,10 @@ func (linkedList *singlyLinkedList[Type]) Delete() (Type, error) {
 	}
 
 	hook := linkedList.head
-	linkedList.head = hook.Next
+	linkedList.head = hook.Next()
 
-	data = hook.Data
-	hook.Next = nil
+	data = hook.Data()
+	hook.AddReferenceOnNext(nil)
 
 	linkedList.length--
 	return data, nil
@@ -92,11 +92,11 @@ func (linkedList *singlyLinkedList[Type]) RemoveAt(index int) (Type, error) {
 		return linkedList.Delete()
 	}
 	hook := linkedList.searchNode(index)
-	hookAtIndex := hook.Next
+	hookAtIndex := hook.Next()
 	
-	data = hookAtIndex.Data
-	hook.Next = hookAtIndex.Next
-	hookAtIndex.Next = nil
+	data = hookAtIndex.Data()
+	hook.AddReferenceOnNext(hookAtIndex.Next())
+	hookAtIndex.AddReferenceOnNext(nil)
 
 	linkedList.length--
 	return data, nil
@@ -107,8 +107,8 @@ func (linkedList *singlyLinkedList[Type]) Print() {
 	hook := linkedList.head
 	
 	for (hook != nil) {
-		fmt.Printf("%v, ", hook.Data)
-		hook = hook.Next
+		fmt.Printf("%v, ", hook.Data())
+		hook = hook.Next()
 	}
 	fmt.Printf("Length: %v\n", linkedList.length)
 }
@@ -128,7 +128,7 @@ func (linkedList *singlyLinkedList[Type]) searchNode(index int) (*t.SingleNode[T
 	hook := linkedList.head
 
 	for (index - 1 > 0) {
-		hook = hook.Next
+		hook = hook.Next()
 		index--
 	}
 	return hook
