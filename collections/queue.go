@@ -1,7 +1,7 @@
 package collections
 
 import (
-	"GoDataStructure/collections/node"
+	t "GoDataStructure/collections/types"
 	"errors"
 	"fmt"
 )
@@ -11,14 +11,14 @@ var (
 )
 
 // FIFO - First In, First Out
-type queue[Type node.Number | string] struct {
-	head   *node.SingleNode[Type]
-	tail   *node.SingleNode[Type]
+type queue[Type t.T] struct {
+	head   *t.SingleNode[Type]
+	tail   *t.SingleNode[Type]
 	length int
 }
 
 // NewQueue: create new instance of queue[Type]
-func NewQueue[Type node.Number | string]() *queue[Type] {
+func NewQueue[Type t.T]() *queue[Type] {
 	queue := &queue[Type]{
 		head: nil,
 		tail: nil,
@@ -28,62 +28,65 @@ func NewQueue[Type node.Number | string]() *queue[Type] {
 }
 
 // Enqueue: adds a new SingleNode[Type] to the queue[Type] - O(1)
-func (queue *queue[Type]) Enqueue(data Type) {
-	node := node.NewSingleNode(data)
+func (q *queue[Type]) Enqueue(data Type) {
+	node := t.NewSingleNode(data)
 	
-	if (queue.length == 0) {
-		queue.head = node
+	if (q.length == 0) {
+		q.head = node
 	} else {
-		queue.tail.Next = node
+		q.tail.AddReferenceOnNext(node)
 	}
-	queue.tail = node
-	queue.length++
+	q.tail = node
+	q.length++
 }
 
 // Dequeue: removes the first element added, returning the data in the SingleNode[Type] - O(1)
-func (queue *queue[Type]) Dequeue() (Type, error) {
+func (q *queue[Type]) Dequeue() (Type, error) {
 	var data Type
 
-	if (queue.length == 0) {
+	if (q.length == 0) {
 		return data, errEmptyQueue
 	}
-	data = queue.head.Data
+	data = q.head.Data()
 
-	if (queue.length == 1) {
-		queue.tail = queue.tail.Next
+	if (q.length == 1) {
+		q.tail = q.tail.Next()
 	}
-	queue.head = queue.head.Next
-	queue.length--
+	q.head = q.head.Next()
+	q.length--
 
 	return data, nil
 }
 
 // Contains: checks if queue[Type] contains the data in any SingleNode[Type],
 // returning true if yes, false otherwise - O(n)
-func (queue *queue[Type]) Contains(data Type) (bool, error) {
-	if (queue.length == 0) {
+func (q *queue[Type]) Contains(data Type) (bool, error) {
+	if (q.length == 0) {
 		return false, errEmptyQueue
 	}
-	hook := queue.head
+	hook := q.head
 
 	for {
 		if (hook == nil) {
 			return false, nil
 		}
-		if (hook.Data == data) {
+		if (hook.Data() == data) {
 			return true, nil
 		}
-		hook = hook.Next
+		hook = hook.Next()
 	}
 }
 
-// Print: traverses through the queue[Type], printing the data to the existing SingleNode[Type] - O(n)
-func (queue *queue[Type]) Print() {
-	hook := queue.head
+// print: traverses through the queue[Type], printing the data to the existing SingleNode[Type] - O(n)
+func (q *queue[Type]) print() {
+	hook := q.head
 
 	for (hook != nil) {
-		fmt.Printf("%v, ", hook.Data)
-		hook = hook.Next
+		fmt.Printf("%v, ", hook.Data())
+		hook = hook.Next()
 	}
-	fmt.Printf("Length: %v\n", queue.length)
+}
+
+func (q *queue[Type]) Length() int {
+	return q.length
 }

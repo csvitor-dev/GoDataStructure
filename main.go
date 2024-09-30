@@ -1,19 +1,22 @@
 package main
 
 import (
-	"GoDataStructure/collections"
-	"fmt"
+	c "GoDataStructure/collections"
 )
 
 func main() {
+	c1 := c.NewDoublyLinkedList[string]()
+	c2 := c.NewSinglyLinkedList[string]()
+	c3 := c.NewQueue[string]()
+	c4 := c.NewStack[string]()
 
-	doublyLinkedList := collections.NewDoublyLinkedList[string]()
-	doublyLinkedList.InsertAt(0, "C#")
-	doublyLinkedList.InsertAt(0, ".NET")
-	doublyLinkedList.InsertAt(2, "Golang")
-	doublyLinkedList.InsertAt(2, "TypeScript")
-	
-	value, err := doublyLinkedList.RemoveAt(2)
-	doublyLinkedList.Print(true)
-	fmt.Printf("%v, %v\n", value, err)
+	c1.Add("C#")
+	c2.Add("TypeScript")
+	c3.Enqueue("Golang")
+	c4.Push("An Ordinary Software Engineering")
+
+	c.Print(c1)
+	c.Print(c2)
+	c.Print(c3)
+	c.Print(c4)
 }
