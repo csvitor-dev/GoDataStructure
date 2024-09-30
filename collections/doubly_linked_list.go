@@ -22,88 +22,88 @@ func NewDoublyLinkedList[Type t.T]() *doublyLinkedList[Type] {
 }
 
 // Add: adds a new DoubleNode[Type] to the doublyLinkedList[Type], default insertion - 0(1)
-func (ll *doublyLinkedList[Type]) Add(data Type) {
+func (dll *doublyLinkedList[Type]) Add(data Type) {
 	node := t.NewDoubleNode(data)
 
-	if (ll.length == 0) {
-		ll.head = node
+	if (dll.length == 0) {
+		dll.head = node
 	} else {
-		ll.tail.AddReferenceOnNext(node)
-		node.AddReferenceOnPrevious(ll.tail)
+		dll.tail.AddReferenceOnNext(node)
+		node.AddReferenceOnPrevious(dll.tail)
 	}
-	ll.tail = node
-	ll.length++
+	dll.tail = node
+	dll.length++
 }
 
 // InsertAt: adds a new DoubleNode[Type] to the doublyLinkedList[Type] in the index if it is valid, otherwise return error - O(n)
-func (ll *doublyLinkedList[Type]) InsertAt(index int, data Type) error {
-	if (!ll.isValidIndexInsert(index)) {
+func (dll *doublyLinkedList[Type]) InsertAt(index int, data Type) error {
+	if (!dll.isValidIndexInsert(index)) {
 		return errOutOfRangeIndex
 	}
 
-	if (index == ll.length) {
-		ll.Add(data)
+	if (index == dll.length) {
+		dll.Add(data)
 		return nil
 	}
 	node := t.NewDoubleNode(data)
 
 	if (index == 0) {
-		node.AddReferenceOnNext(ll.head)
-		ll.head.AddReferenceOnPrevious(node)
-		ll.head = node
+		node.AddReferenceOnNext(dll.head)
+		dll.head.AddReferenceOnPrevious(node)
+		dll.head = node
 	} else {
-		hookAtIndex := ll.searchNode(index)
+		hookAtIndex := dll.searchNode(index)
 		node.AddReferenceOnNext(hookAtIndex.Next())
 		node.AddReferenceOnPrevious(hookAtIndex)
 		hookAtIndex.Next().AddReferenceOnPrevious(node)
 		hookAtIndex.AddReferenceOnNext(node)
 	}
-	ll.length++
+	dll.length++
 	return nil
 }
 
 // Delete: removes the first element in the list, returning the data to the DoubleNode[Type], default remotion - O(1)
-func (ll *doublyLinkedList[Type]) Delete() (Type, error) {
+func (dll *doublyLinkedList[Type]) Delete() (Type, error) {
 	var data Type
 
-	if (ll.length == 0) {
+	if (dll.length == 0) {
 		return data, errEmptyList
 	}
 
-	hook := ll.head
-	ll.head = hook.Next()
+	hook := dll.head
+	dll.head = hook.Next()
 
-	if (ll.head != nil) {
-		ll.head.AddReferenceOnPrevious(nil)
+	if (dll.head != nil) {
+		dll.head.AddReferenceOnPrevious(nil)
 	}
 
-	if (ll.length == 1) {
-		ll.tail = hook.Previous()
+	if (dll.length == 1) {
+		dll.tail = hook.Previous()
 	}
 
 	data = hook.Data()
 	hook.AddReferenceOnNext(nil)
 
-	ll.length--
+	dll.length--
 	return data, nil
 }
 
 // RemoveAt: removes the element of the doublyLinkedList[Type] in the valid index returning it, otherwise return error - O(n)
-func (ll *doublyLinkedList[Type]) RemoveAt(index int) (Type, error) {
+func (dll *doublyLinkedList[Type]) RemoveAt(index int) (Type, error) {
 	var data Type
 
-	if (!ll.isValidIndexRemove(index)) {
+	if (!dll.isValidIndexRemove(index)) {
 		return data, errOutOfRangeIndex
 	}
 
 	if (index == 0) {
-		return ll.Delete()
+		return dll.Delete()
 	}
 
-	hookAtIndex := ll.searchNode(index)
+	hookAtIndex := dll.searchNode(index)
 
-	if (hookAtIndex.Next() == ll.tail) {
-		ll.tail = hookAtIndex
+	if (hookAtIndex.Next() == dll.tail) {
+		dll.tail = hookAtIndex
 	}
 	data = hookAtIndex.Next().Data()
 
@@ -116,60 +116,60 @@ func (ll *doublyLinkedList[Type]) RemoveAt(index int) (Type, error) {
 	hook.AddReferenceOnNext(nil)
 	hook.AddReferenceOnPrevious(nil)
 
-	ll.length--
+	dll.length--
 	return data, nil
 }
 
-// Print: traverses through the doublyLinkedList[Type], printing the data to the existing DoubleNode[Type];
-// option parameter allows define the order of print: true is ascending and false is descending - O(n)
-func (ll *doublyLinkedList[Type]) Print(option bool) {
-	if (ll.length == 0) {
-		fmt.Printf("Length: %v\n", ll.length)
+// print: traverses through the doublyLinkedList[Type], printing the data to the existing DoubleNode[Type];
+// option parameter adllows define the order of print: true is ascending and false is descending - O(n)
+func (dll *doublyLinkedList[Type]) print() {
+	if (dll.length == 0) {
 		return
 	}
-	
-	if (option) {
-		ll.printAscendent()
-		return
-	}
-	ll.printDescendent()
+	fmt.Println("Print Ascendent...")
+	dll.printAscendent()
+
+	fmt.Println("\nPrint Descendent...")
+	dll.printDescendent()
 }
 
 // printAscendent: ...
-func (ll *doublyLinkedList[Type]) printAscendent() {
-	hook := ll.head
+func (dll *doublyLinkedList[Type]) printAscendent() {
+	hook := dll.head
 	
 	for (hook != nil) {
 		fmt.Printf("%v, ", hook.Data())
 		hook = hook.Next()
 	}
-	fmt.Printf("Length: %v\n", ll.length)
 }
 
 // printDescendent: ...
-func (ll *doublyLinkedList[Type]) printDescendent() {
-	hook := ll.tail
+func (dll *doublyLinkedList[Type]) printDescendent() {
+	hook := dll.tail
 	
 	for (hook != nil) {
 		fmt.Printf("%v, ", hook.Data())
 		hook = hook.Previous()
 	}
-	fmt.Printf("Length: %v\n", ll.length)
+}
+
+func (dll *doublyLinkedList[Type]) Length() int {
+	return dll.length
 }
 
 // isValidIndexInsert: validates the index based in the list to InsertAt method
-func (ll *doublyLinkedList[Type]) isValidIndexInsert(index int) bool {
-	return index >= 0 && index <= ll.length
+func (dll *doublyLinkedList[Type]) isValidIndexInsert(index int) bool {
+	return index >= 0 && index <= dll.length
 }
 
 // isValidIndexRemove: validates the index based in the list to RemoveAt method
-func (ll *doublyLinkedList[Type]) isValidIndexRemove(index int) bool {
-	return index >= 0 && index < ll.length
+func (dll *doublyLinkedList[Type]) isValidIndexRemove(index int) bool {
+	return index >= 0 && index < dll.length
 }
 
 // searchNode: searches for DoubleNode[Type] in the valid index and returns the reference of the node before it
-func (ll *doublyLinkedList[Type]) searchNode(index int) (*t.DoubleNode[Type]) {
-	hook := ll.head
+func (dll *doublyLinkedList[Type]) searchNode(index int) (*t.DoubleNode[Type]) {
+	hook := dll.head
 
 	for {
 		if (index - 1 == 0) {

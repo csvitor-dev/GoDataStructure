@@ -26,106 +26,109 @@ func NewSinglyLinkedList[Type t.T]() *singlyLinkedList[Type] {
 }
 
 // Add: adds a new SingleNode[Type] to the singlyLinkedList[Type], default insertion - 0(1)
-func (linkedList *singlyLinkedList[Type]) Add(data Type) {
+func (sll *singlyLinkedList[Type]) Add(data Type) {
 	node := t.NewSingleNode(data)
 
-	if (linkedList.length == 0) {
-		linkedList.head = node
+	if (sll.length == 0) {
+		sll.head = node
 	} else {
-		hookAtLastIndex := linkedList.searchNode(linkedList.length)
+		hookAtLastIndex := sll.searchNode(sll.length)
 		hookAtLastIndex.AddReferenceOnNext(node)
 	}
-	linkedList.length++
+	sll.length++
 }
 
 // InsertAt: adds a new SingleNode[Type] to the singlyLinkedList[Type] in the index if it is valid, otherwise return error - O(n)
-func (linkedList *singlyLinkedList[Type]) InsertAt(index int, data Type) error {
-	if (!linkedList.isValidIndexInsert(index)) {
+func (sll *singlyLinkedList[Type]) InsertAt(index int, data Type) error {
+	if (!sll.isValidIndexInsert(index)) {
 		return errOutOfRangeIndex
 	}
 
-	if (index == linkedList.length) {
-		linkedList.Add(data)
+	if (index == sll.length) {
+		sll.Add(data)
 		return nil
 	}
 	node := t.NewSingleNode(data)
 
 	if (index == 0) {
-		node.AddReferenceOnNext(linkedList.head)
-		linkedList.head = node
+		node.AddReferenceOnNext(sll.head)
+		sll.head = node
 	} else {
-		hookAtIndex := linkedList.searchNode(index)
+		hookAtIndex := sll.searchNode(index)
 		node.AddReferenceOnNext(hookAtIndex.Next())
 		hookAtIndex.AddReferenceOnNext(node)
 	}
-	linkedList.length++
+	sll.length++
 	return nil
 }
 
 // Delete: removes the first element in the list, returning the data to the SingleNode[Type], default remotion - O(1)
-func (linkedList *singlyLinkedList[Type]) Delete() (Type, error) {
+func (sll *singlyLinkedList[Type]) Delete() (Type, error) {
 	var data Type
 
-	if (linkedList.length == 0) {
+	if (sll.length == 0) {
 		return data, errEmptyList
 	}
 
-	hook := linkedList.head
-	linkedList.head = hook.Next()
+	hook := sll.head
+	sll.head = hook.Next()
 
 	data = hook.Data()
 	hook.AddReferenceOnNext(nil)
 
-	linkedList.length--
+	sll.length--
 	return data, nil
 }
 
 // RemoveAt: removes the element of the singlyLinkedList[Type] in the valid index returning it, otherwise return error - O(n)
-func (linkedList *singlyLinkedList[Type]) RemoveAt(index int) (Type, error) {
+func (sll *singlyLinkedList[Type]) RemoveAt(index int) (Type, error) {
 	var data Type
 
-	if (!linkedList.isValidIndexRemove(index)) {
+	if (!sll.isValidIndexRemove(index)) {
 		return data, errOutOfRangeIndex
 	}
 
 	if (index == 0) {
-		return linkedList.Delete()
+		return sll.Delete()
 	}
-	hook := linkedList.searchNode(index)
+	hook := sll.searchNode(index)
 	hookAtIndex := hook.Next()
 	
 	data = hookAtIndex.Data()
 	hook.AddReferenceOnNext(hookAtIndex.Next())
 	hookAtIndex.AddReferenceOnNext(nil)
 
-	linkedList.length--
+	sll.length--
 	return data, nil
 }
 
-// Print: traverses through the singlyLinkedList[Type], printing the data to the existing SingleNode[Type] - O(n)
-func (linkedList *singlyLinkedList[Type]) Print() {
-	hook := linkedList.head
+// print: traverses through the singlyLinkedList[Type], printing the data to the existing SingleNode[Type] - O(n)
+func (sll *singlyLinkedList[Type]) print() {
+	hook := sll.head
 	
 	for (hook != nil) {
 		fmt.Printf("%v, ", hook.Data())
 		hook = hook.Next()
 	}
-	fmt.Printf("Length: %v\n", linkedList.length)
+}
+
+func (sll *singlyLinkedList[Type]) Length() int {
+	return sll.length
 }
 
 // isValidIndexInsert: validates the index based in the list to InsertAt method
-func (linkedList *singlyLinkedList[Type]) isValidIndexInsert(index int) bool {
-	return index >= 0 && index <= linkedList.length
+func (sll *singlyLinkedList[Type]) isValidIndexInsert(index int) bool {
+	return index >= 0 && index <= sll.length
 }
 
 // isValidIndexRemove: validates the index based in the list to RemoveAt method
-func (linkedList *singlyLinkedList[Type]) isValidIndexRemove(index int) bool {
-	return index >= 0 && index < linkedList.length
+func (sll *singlyLinkedList[Type]) isValidIndexRemove(index int) bool {
+	return index >= 0 && index < sll.length
 }
 
 // searchNode: searches for SingleNode[Type] in the valid index and returns the reference of the node before it
-func (linkedList *singlyLinkedList[Type]) searchNode(index int) (*t.SingleNode[Type]) {
-	hook := linkedList.head
+func (sll *singlyLinkedList[Type]) searchNode(index int) (*t.SingleNode[Type]) {
+	hook := sll.head
 
 	for (index - 1 > 0) {
 		hook = hook.Next()
