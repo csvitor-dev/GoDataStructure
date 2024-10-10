@@ -112,6 +112,23 @@ func (sll *singlyLinkedList[Type]) print() {
 	}
 }
 
+func (sll *singlyLinkedList[Type]) find(index int) (Type, error) {
+	hook := sll.head
+	var v Type
+
+	if index < 0 || index >= sll.length {
+		return v, errOutOfRangeIndex
+	}
+
+	for (index > 0) {
+		hook = hook.Next()
+		index--
+	}
+	v = hook.Data()
+	
+	return v, nil
+}
+
 func (sll *singlyLinkedList[Type]) Length() int {
 	return sll.length
 }
