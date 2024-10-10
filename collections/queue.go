@@ -87,6 +87,23 @@ func (q *queue[Type]) print() {
 	}
 }
 
+func (q *queue[Type]) find(index int) (Type, error) {
+	hook := q.head
+	var v Type
+
+	if index < 0 || index >= q.length {
+		return v, errOutOfRangeIndex
+	}
+
+	for (index > 0) {
+		hook = hook.Next()
+		index--
+	}
+	v = hook.Data()
+	
+	return v, nil
+}
+
 func (q *queue[Type]) Length() int {
 	return q.length
 }

@@ -58,6 +58,23 @@ func (s *stack[Type]) print() {
 	}
 }
 
+func (s *stack[Type]) find(index int) (Type, error) {
+	hook := s.head
+	var v Type
+
+	if index < 0 || index >= s.length {
+		return v, errOutOfRangeIndex
+	}
+
+	for (index > 0) {
+		hook = hook.Next()
+		index--
+	}
+	v = hook.Data()
+	
+	return v, nil
+}
+
 func (s *stack[Type]) Length() int {
 	return s.length
 }

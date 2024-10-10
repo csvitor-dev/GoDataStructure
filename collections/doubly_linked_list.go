@@ -133,6 +133,23 @@ func (dll *doublyLinkedList[Type]) print() {
 	dll.printDescendent()
 }
 
+func (dll *doublyLinkedList[Type]) find(index int) (Type, error) {
+	hook := dll.head
+	var v Type
+
+	if index < 0 || index >= dll.length {
+		return v, errOutOfRangeIndex
+	}
+
+	for (index > 0) {
+		hook = hook.Next()
+		index--
+	}
+	v = hook.Data()
+	
+	return v, nil
+}
+
 // printAscendent: ...
 func (dll *doublyLinkedList[Type]) printAscendent() {
 	hook := dll.head
